@@ -1,5 +1,5 @@
 import ForwardButton from '@/components/client/ForwardButton'
-import { getChatBot } from '@/app/services/chatbotService'
+import { getChatBot } from '@/app/services/server/chatbotService'
 import { notFound } from 'next/navigation'
 import Form from './Form'
 

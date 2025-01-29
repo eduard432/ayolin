@@ -23,7 +23,7 @@ const ActionMenu = ({chatBot}: {chatBot: ChatBotRecord }) => {
 			<div className="flex gap-1">
 				<a
 					target="_blank"
-					href={`${process.env.NEXT_PUBLIC_API_URL}/chat/link/${chatBot._id}`}
+					href={`/api/link/${chatBot._id}`}
 					className="px-2 border border-gray-300 rounded text-sm flex gap-1 items-center">
 					<FaLink /> Chat Link
 				</a>

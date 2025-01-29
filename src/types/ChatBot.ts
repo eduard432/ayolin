@@ -5,14 +5,14 @@ export interface ChatBotRecord extends ChatBot {
     defaultChatId: string
     userId: string,
     _id: string
-    chats: ChatRecord[]
+    chats: string[]
 
 }
 
 export interface ChatBotDb extends ChatBot {
     defaultChatId: ObjectId
     userId: ObjectId,
-    chats: ChatDb[]
+    chats: ObjectId[]
 }
 
 export interface ChatBot {

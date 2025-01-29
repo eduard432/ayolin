@@ -1,4 +1,5 @@
 import { aiPlugins } from '@/ai/plugins'
+import { getChatInfo } from '@/app/services/server/chatService'
 import { getDatabase } from '@/lib/db'
 import { ChatDb } from '@/types/Chat'
 import { ChatBotDb } from '@/types/ChatBot'
@@ -16,6 +17,30 @@ import {
 } from 'ai'
 import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
+
+export async function GET(
+	request: NextRequest,
+	{ params }: { params: Promise<{ id: string }> }
+) {
+	const { id: chatId } = await params
+	const result = await getChatInfo(chatId)
+
+	const response = NextResponse
+	if (result) {
+		return response.json({
+			...result,
+		})
+	} else {
+		return response.json(
+			{
+				message: 'Chat Not found',
+			},
+			{
+				status: 404,
+			}
+		)
+	}
+}
 
 export async function POST(
 	request: NextRequest,

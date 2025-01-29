@@ -1,6 +1,6 @@
-import { getChatInfo } from '@/app/services/chatService'
+import { getChatInfo } from '@/app/services/server/chatService'
 import Chat from '@/components/client/Chat'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import React from 'react'
 
 interface ChatPageProps {
