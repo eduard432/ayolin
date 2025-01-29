@@ -18,7 +18,9 @@ export const providerMap = providers
   .filter((provider) => provider.id !== "credentials");
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: MongoDBAdapter(client),
+  adapter: MongoDBAdapter(client, {
+    databaseName: 'chatbot_db'
+  }),
   providers,
   pages: {
     signIn: '/login'
