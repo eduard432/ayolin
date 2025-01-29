@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.1.5",
     "@auth/mongodb-adapter": "^3.7.4",
     "@uiw/react-md-editor": "^4.0.5",
     "ai": "^4.1.5",
