@@ -9,7 +9,7 @@ const ChatBots = ({ chatBots: initialChatBots }: { chatBots: ChatBotRecord[] }) 
 	const [chatBots, setChatBots] = useState(initialChatBots)
 	const router = useRouter()
 
-    const handleDeleteData = async (id: string) => {
+	const handleDeleteData = async (id: string) => {
 		const response = await fetch(`/api/chatbot/${id}`, {
 			method: 'DELETE',
 		})

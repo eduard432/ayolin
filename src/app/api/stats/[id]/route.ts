@@ -9,22 +9,24 @@ export async function GET(
 ) {
 	const { id } = await params
 
-    const db = await getDatabase()
-    const chatCollection = db.collection<ChatDb>('chat')
-    const chatBotId = new ObjectId(id)
+	const db = await getDatabase()
+	const chatCollection = db.collection<ChatDb>('chat')
+	const chatBotId = new ObjectId(id)
 
-    const chatCount = await chatCollection.countDocuments({chatBotId})
+	const chatCount = await chatCollection.countDocuments({ chatBotId })
 
-    // Aggregate operation to count the number of messages
-		const result = await chatCollection.aggregate([
+	// Aggregate operation to count the number of messages
+	const result = await chatCollection
+		.aggregate([
 			{ $match: { chatBotId } },
 			{ $unwind: '$messages' },
 			{ $count: 'messages' },
-		]).next()
+		])
+		.next()
 
-		const messageCount = result ? result.messages : 0;
-        return NextResponse.json({
-            chatCount,
-            messageCount
-        })
+	const messageCount = result ? result.messages : 0
+	return NextResponse.json({
+		chatCount,
+		messageCount,
+	})
 }

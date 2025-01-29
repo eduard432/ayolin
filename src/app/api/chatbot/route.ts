@@ -1,6 +1,6 @@
 import { getDatabase } from '@/lib/db'
 import { ChatDb } from '@/types/Chat'
-import { ChatBot, ChatBotDb } from '@/types/ChatBot'
+import { ChatBotDb } from '@/types/ChatBot'
 import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -27,23 +27,31 @@ export async function POST(request: NextRequest) {
 		userId: userObjectId,
 	}
 	const chatBotResult = await chatBotCollection.insertOne(chatBot)
-	await chatCollection.insertOne({ _id: chatId, chatBotId: chatBotResult.insertedId, messages: [] })
+	await chatCollection.insertOne({
+		_id: chatId,
+		chatBotId: chatBotResult.insertedId,
+		messages: [],
+	})
 
+	const response = NextResponse
 
-    const response = NextResponse
-
-    if(chatBotResult) {
-        return response.json({
-            msg: 'ChatBot created'
-        }, {
-            status: 201
-        })
-    } else {
-        return response.json({
-            msg: 'Error creating chatbot'
-        }, {
-            status: 500
-        })
-    }
+	if (chatBotResult) {
+		return response.json(
+			{
+				msg: 'ChatBot created',
+			},
+			{
+				status: 201,
+			}
+		)
+	} else {
+		return response.json(
+			{
+				msg: 'Error creating chatbot',
+			},
+			{
+				status: 500,
+			}
+		)
+	}
 }
-

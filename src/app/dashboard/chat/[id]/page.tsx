@@ -24,22 +24,19 @@ export default function DashBoardChatPage() {
 		return setChatInfo(undefined)
 	}, [id])
 
-
 	const getChatInfo = async () => {
 		const response = await fetch(`/api/chat/${id}`)
-		if(response.ok) {
+		if (response.ok) {
 			const data = await response.json()
 			setChatInfo(data)
 		} else {
 			router.push('/dashboard')
 		}
-		
 	}
-
 
 	const handleDeleteAllMessages = async () => {
 		const response = await fetch(`/api/messages/${id}`, {
-			method: 'DELETE'
+			method: 'DELETE',
 		})
 		if (response.ok) {
 			setClean(true)
@@ -55,10 +52,12 @@ export default function DashBoardChatPage() {
 						Chateando con: {chatInfo.chatBot.name}
 					</h2>
 					<p className="text-xl text-semibold">Usa el model: {chatInfo.chatBot.model}</p>
-					<section className="w-2/3 mx-auto my-4 flex justify-end" >
+					<section className="w-2/3 mx-auto my-4 flex justify-end">
 						<div className="flex gap-1">
 							<button
-								onClick={() => router.push(`/dashboard/chatbot/edit/${chatInfo.chatBot._id}`)}
+								onClick={() =>
+									router.push(`/dashboard/chatbot/edit/${chatInfo.chatBot._id}`)
+								}
 								className="px-2 border border-gray-300 rounded text-sm flex gap-1 items-center">
 								<FaPencil /> Editar ChatBot
 							</button>

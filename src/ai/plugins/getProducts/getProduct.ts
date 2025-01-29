@@ -34,5 +34,5 @@ export const getProductTool = tool({
 			.string()
 			.describe('El nombre del producto o descripcion proporcionada por el usuario'),
 	}),
-    execute: getProduct
+	execute: getProduct,
 })

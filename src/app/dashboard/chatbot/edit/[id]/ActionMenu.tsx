@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { FaCopy, FaLink, FaRegMessage, FaTrash } from 'react-icons/fa6'
 
-const ActionMenu = ({chatBot}: {chatBot: ChatBotRecord }) => {
-
+const ActionMenu = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 	const router = useRouter()
 
 	const handleDeleteData = async () => {

@@ -6,11 +6,11 @@ import ForwardButton from '@/components/client/ForwardButton'
 
 type InputData = {
 	name: string
-	initialPrompt: string,
+	initialPrompt: string
 	model: string
 }
 
-export default function Form({userId}: {userId: string}) {
+export default function Form({ userId }: { userId: string }) {
 	const router = useRouter()
 
 	const {
@@ -31,7 +31,7 @@ export default function Form({userId}: {userId: string}) {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({...inputData, userId })
+			body: JSON.stringify({ ...inputData, userId }),
 		})
 		if (response.ok) {
 			router.push('/dashboard')
@@ -61,25 +61,30 @@ export default function Form({userId}: {userId: string}) {
 					</div>
 					<div className="flex gap-2 items-center">
 						<label htmlFor="model">Modelo:</label>
-						<select {...register('model', {
-							required: {
-								message: 'Este campo es requerido',
-								value: true
-							}
-						})} className="px-2 py-1 border rounded border-gray-300" name="model">
+						<select
+							{...register('model', {
+								required: {
+									message: 'Este campo es requerido',
+									value: true,
+								},
+							})}
+							className="px-2 py-1 border rounded border-gray-300"
+							name="model">
 							<option>gpt-3.5-turbo</option>
 							<option>gpt-4-turbo</option>
 							<option>gpt-4</option>
 							<option>gpt-4o</option>
-						</select>	
+						</select>
 					</div>
 					<div className="flex flex-col gap-2">
 						<label htmlFor="initialPrompt">Mensaje Inicial:</label>
 						<textarea
-							{...register('initialPrompt', { required: {
-								message: 'Este campo es requerido',
-								value: true
-							} })}
+							{...register('initialPrompt', {
+								required: {
+									message: 'Este campo es requerido',
+									value: true,
+								},
+							})}
 							className="outline-none border border-gray-300 rounded px-2 py-1"
 							rows={2}
 							name="initialPrompt"></textarea>

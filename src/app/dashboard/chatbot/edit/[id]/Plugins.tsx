@@ -21,32 +21,32 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 		}
 	}
 
-    const handleDeleteFunction = async (func: string) => {
-        if (!chatBot) return
-        const result = await fetch(`/api/plugin`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                botId: chatBot?._id,
-                plugin: func,
-            }),
-        })
-        if (result.ok) {
-            const newData = {
-                ...chatBot,
-                tools: chatBot.tools.filter((tool) => tool !== func),
-            }
-            setChatBot(newData)
-        }
-    }
+	const handleDeleteFunction = async (func: string) => {
+		if (!chatBot) return
+		const result = await fetch(`/api/plugin`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				botId: chatBot?._id,
+				plugin: func,
+			}),
+		})
+		if (result.ok) {
+			const newData = {
+				...chatBot,
+				tools: chatBot.tools.filter((tool) => tool !== func),
+			}
+			setChatBot(newData)
+		}
+	}
 
-    useEffect(() => {
+	useEffect(() => {
 		handleGetFunctions()
 	}, [])
 
-    const handleAddFunction = async () => {
+	const handleAddFunction = async () => {
 		if (!chatBot) return
 		if (selectedFunc == '') return
 		if (chatBot.tools.includes(selectedFunc)) return
@@ -80,11 +80,13 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 					className="px-2 py-1 border rounded border-gray-300 min-w-40 capitalize"
 					name="connectionType">
 					<option value=""></option>
-					{funcs.filter((func) => !chatBot.tools.includes(func)).map((func) => (
-						<option className="capitalize" key={func} value={func}>
-							{func.replaceAll('_', ' ')}
-						</option>
-					))}
+					{funcs
+						.filter((func) => !chatBot.tools.includes(func))
+						.map((func) => (
+							<option className="capitalize" key={func} value={func}>
+								{func.replaceAll('_', ' ')}
+							</option>
+						))}
 				</select>
 				<button
 					onClick={() => handleAddFunction()}
