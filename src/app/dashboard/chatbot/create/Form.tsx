@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import ForwardButton from '@/components/client/ForwardButton'
+import { MODELS } from '@/lib/MODELS'
 
 type InputData = {
 	name: string
@@ -70,10 +71,9 @@ export default function Form({ userId }: { userId: string }) {
 							})}
 							className="px-2 py-1 border rounded border-gray-300"
 							name="model">
-							<option>gpt-3.5-turbo</option>
-							<option>gpt-4-turbo</option>
-							<option>gpt-4</option>
-							<option>gpt-4o</option>
+							{Object.keys(MODELS).map((model) => (
+								<option>{model}</option>
+							))}
 						</select>
 					</div>
 					<div className="flex flex-col gap-2">
