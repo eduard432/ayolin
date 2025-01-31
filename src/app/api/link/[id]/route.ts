@@ -2,13 +2,13 @@ import { getDatabase } from '@/lib/db'
 import { ChatDb } from '@/types/Chat'
 import { ChatBotDb } from '@/types/ChatBot'
 import { ObjectId } from 'mongodb'
-import { NextApiRequest } from 'next'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(
-	request: NextApiRequest,
+export async function GET(
+	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> }
 ) {
+	console.log('exec')
 	const { id: chatBotId } = await params
 	const chatBotObjectId = new ObjectId(chatBotId)
 
@@ -30,7 +30,9 @@ export async function POST(
 		)
 
 		if (chatBotResult.modifiedCount > 0) {
-			return response.redirect(`/chat/${chatResult.insertedId.toString()}`)
+			const url = request.nextUrl.clone()
+			url.pathname = `/chat/${chatResult.insertedId.toString()}`
+			return response.redirect(url)
 		} else {
 			return response.json(
 				{

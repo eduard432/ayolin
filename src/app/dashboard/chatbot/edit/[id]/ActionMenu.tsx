@@ -1,12 +1,13 @@
 'use client'
 
 import { ChatBotRecord } from '@/types/ChatBot'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname  } from 'next/navigation'
 import React from 'react'
 import { FaCopy, FaLink, FaRegMessage, FaTrash } from 'react-icons/fa6'
 
 const ActionMenu = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 	const router = useRouter()
+	const pathName= usePathname()
 
 	const handleDeleteData = async () => {
 		const response = await fetch(`/api/chatbot/${chatBot._id}`, {
@@ -20,12 +21,11 @@ const ActionMenu = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 	return (
 		<section>
 			<div className="flex gap-1">
-				<a
-					target="_blank"
-					href={`/api/link/${chatBot._id}`}
+				<button
+					onClick={() => navigator.clipboard.writeText(`${window.location.origin}/api/link/${chatBot._id}`)}
 					className="px-2 border border-gray-300 rounded text-sm flex gap-1 items-center">
 					<FaLink /> Chat Link
-				</a>
+				</button>
 				<button
 					onClick={() => navigator.clipboard.writeText(chatBot._id)}
 					className="px-2 border border-gray-300 rounded text-sm flex gap-1 items-center">
