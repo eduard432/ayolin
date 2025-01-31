@@ -16,7 +16,7 @@ interface ChatProps {
 const Chat = ({ messages: initialMessages, id, clean, setClean }: ChatProps) => {
 	const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } =
 		useChat({
-			api: `/api/test/chat/${id}`,
+			api: `/api/chat/${id}`,
 			initialMessages,
 		})
 
