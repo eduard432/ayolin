@@ -44,7 +44,7 @@ export default function DashBoardChatPage() {
 	}
 
 	return (
-		<main className="p-4 px-12 h-screen">
+		<main className="p-4 px-12 h-screen bg-neutral-50 text-neutral-950">
 			<ForwardButton />
 			{chatInfo && (
 				<>

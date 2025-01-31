@@ -17,7 +17,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
 	if (!chat) return notFound()
 
 	return (
-		<main className="p-4 px-12 h-screen">
+		<main className="p-4 px-12 h-screen bg-neutral-50 text-neutral-950">
 			<>
 				<h2 className="text-2xl font-semibold">Chateando con: {chat.chatBot.name}</h2>
 				<Chat messages={chat.messages} id={id} />
