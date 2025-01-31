@@ -43,10 +43,10 @@ const Stats = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 									notation: 'compact',
 								})}
 							</span>{' '}
-							<span className="bg-sky-200 px-2 rounded" >* {usedTokens.input} tkn</span>
-							= {' '}
+							* <span className="bg-sky-200 px-2 rounded">{usedTokens.input} tkn</span>{' '}={' '}
 							<span className="bg-neutral-800 text-neutral-50 px-2 rounded">
-								${((MODELS[model][0] / 1000000) * usedTokens.input).toLocaleString(
+								$
+								{((MODELS[model][0] / 1000000) * usedTokens.input).toLocaleString(
 									'es-Mx',
 									{
 										notation: 'compact',
@@ -68,10 +68,10 @@ const Stats = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 									notation: 'compact',
 								})}
 							</span>{' '}
-							<span className="bg-sky-200 px-2 rounded" >* {usedTokens.output} tkn</span>
-							= {' '}
+							* <span className="bg-sky-200 px-2 rounded">{usedTokens.output} tkn</span>{' '}={' '}
 							<span className="bg-neutral-800 text-neutral-50 px-2 rounded">
-								${((MODELS[model][1] / 1000000) * usedTokens.output).toLocaleString(
+								$
+								{((MODELS[model][1] / 1000000) * usedTokens.output).toLocaleString(
 									'es-Mx',
 									{
 										notation: 'compact',
