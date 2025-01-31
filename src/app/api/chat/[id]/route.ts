@@ -46,6 +46,7 @@ export async function POST(
 	const chatCollection = db.collection<ChatDb>('chat')
 	const chatBotCollection = db.collection<ChatBotDb>('chatbot')
 
+	// TODO: Se puede hacer más eficiente esto:
 	const chatResult = await chatCollection.findOne({
 		_id: chatId,
 	})
@@ -56,6 +57,18 @@ export async function POST(
 			{
 				$push: {
 					messages: messages[messages.length - 1],
+				},
+			}
+		)
+
+		// TODO: Se puede hacer más eficiente esto:
+		await chatBotCollection.updateOne(
+			{
+				_id: chatResult.chatBotId,
+			},
+			{
+				$inc: {
+					totalMessages: 1,
 				},
 			}
 		)
@@ -91,8 +104,17 @@ export async function POST(
 									id: response.messages[response.messages.length - 1].id,
 								},
 							},
+						}
+					)
+					await chatBotCollection.updateOne(
+						{
+							_id: chatResult.chatBotId,
+						},
+						{
 							$inc: {
-								usedTokens: usage.totalTokens,
+								totalMessages: 1,
+								'usedTokens.input': usage.promptTokens,
+								'usedTokens.output': usage.completionTokens
 							},
 						}
 					)

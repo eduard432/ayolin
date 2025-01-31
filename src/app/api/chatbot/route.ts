@@ -21,9 +21,13 @@ export async function POST(request: NextRequest) {
 		name,
 		initialPrompt,
 		defaultChatId: chatId,
-		chats: [],
+		chats: [chatId],
 		tools: [],
-		usedTokens: 0,
+		usedTokens: {
+			input: 0,
+			output: 0
+		},
+		totalMessages: 0,
 		userId: userObjectId,
 	}
 	const chatBotResult = await chatBotCollection.insertOne(chatBot)

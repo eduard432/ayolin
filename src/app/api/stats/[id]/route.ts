@@ -16,15 +16,15 @@ export async function GET(
 	const chatCount = await chatCollection.countDocuments({ chatBotId })
 
 	// Aggregate operation to count the number of messages
-	const result = await chatCollection
-		.aggregate([
-			{ $match: { chatBotId } },
-			{ $unwind: '$messages' },
-			{ $count: 'messages' },
-		])
-		.next()
 
-	const messageCount = result ? result.messages : 0
+		const result = await chatCollection.aggregate([
+			{ $match: { chatBotId } },
+			{ $project: { numMessages: { $size: '$messages' } } },
+			{ $group: { _id: null, totalMessages: { $sum: '$numMessages' } } }
+		  ]).next();
+
+
+	const messageCount = result && result.totalMessages
 	return NextResponse.json({
 		chatCount,
 		messageCount,

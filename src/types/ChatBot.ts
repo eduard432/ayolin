@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb'
-import { Chat, ChatDb, ChatRecord } from './Chat'
 
 export interface ChatBotRecord extends ChatBot {
     defaultChatId: string
@@ -20,5 +19,9 @@ export interface ChatBot {
     model: string
     initialPrompt: string
     tools: string[]
-    usedTokens: number,
+    usedTokens: {
+        input: number,
+        output: number
+    },
+    totalMessages: number
 }
