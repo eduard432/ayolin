@@ -2,7 +2,7 @@
 
 import { Message } from 'ai'
 import { useChat } from 'ai/react'
-import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, KeyboardEventHandler, SetStateAction, useEffect, useRef } from 'react'
 import { FaPaperPlane } from 'react-icons/fa6'
 import ReactMarkdown from 'react-markdown'
 
@@ -31,9 +31,17 @@ const Chat = ({ messages: initialMessages, id, clean, setClean }: ChatProps) => 
 		if (clean) clearMessages()
 	}, [clean])
 
+	const inputRef = useRef<HTMLTextAreaElement>(null)
+
+	useEffect(() => {
+		if(!isLoading && inputRef.current) {
+			inputRef.current.focus()
+		}
+	}, [isLoading])
+
 	const handleSubmitKey: KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
 		// Verifica si se presionaron Enter + Alt
-		if (event.key === 'Enter' && event.altKey) {
+		if (event.key === 'Enter' && event.ctrlKey) {
 			event.preventDefault() // Evita que se inserte una nueva línea en el textarea
 			handleSubmit()
 		}
@@ -83,6 +91,7 @@ const Chat = ({ messages: initialMessages, id, clean, setClean }: ChatProps) => 
 				onSubmit={handleSubmit}
 				className="rounded border border-gray-300 w-full flex">
 				<textarea
+					ref={inputRef}
 					disabled={isLoading}
 					value={input}
 					onChange={handleInputChange}
