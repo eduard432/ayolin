@@ -1,8 +1,14 @@
 import { auth } from "@/auth"
 import SignOut from "@/components/signout-button"
+import { Metadata } from "next"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { FaArrowRightFromBracket } from "react-icons/fa6"
+
+export const metadata: Metadata = {
+    title: "Ayolin DashBoard",
+  };
+  
 
 export default async function DashboardLayout({
 	children,
