@@ -1,4 +1,4 @@
-import { CoreMessage } from "ai"
+import { CoreMessage, Message } from "ai"
 import { ObjectId } from "mongodb"
 
 export interface ChatRecord extends Chat {
@@ -10,5 +10,5 @@ export interface ChatDb extends Chat {
 }
 
 export interface Chat {
-    messages: CoreMessage[]
+    messages: Message[]
 }

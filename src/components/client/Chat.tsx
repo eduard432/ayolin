@@ -16,9 +16,8 @@ interface ChatProps {
 const Chat = ({ messages: initialMessages, id, clean, setClean }: ChatProps) => {
 	const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } =
 		useChat({
-			api: `/api/chat/${id}`,
-			initialMessages: initialMessages,
-			body: { id, stream: true, allMessages: true },
+			api: `/api/test/chat/${id}`,
+			initialMessages,
 		})
 
 	const clearMessages = () => {
@@ -39,6 +38,11 @@ const Chat = ({ messages: initialMessages, id, clean, setClean }: ChatProps) => 
 			handleSubmit()
 		}
 	}
+
+	useEffect(() => {
+	  console.log({messages})
+	}, [messages])
+	
 
 	return (
 		<section className="rounded border h-full md:h-5/6 border-gray-300 p-4 w-full md:w-2/3 mx-auto flex flex-col justify-between gap-4 my-2">

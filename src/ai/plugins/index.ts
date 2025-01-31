@@ -4,5 +4,5 @@ import { farenhetToCelsius } from "./farenheitToCelsius/convertGrades";
 
 export const aiPlugins: {[key: string]: CoreTool} = {
     'get_product': getProductTool,
-    'convert_f°-c°': farenhetToCelsius
+    'convert_farenheitToCelsius': farenhetToCelsius
 }

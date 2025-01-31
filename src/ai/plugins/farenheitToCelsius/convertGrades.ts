@@ -15,5 +15,6 @@ export const farenhetToCelsius = tool({
         .number()
         .describe('La temperatura en fahrenheit para convertir'),
     }),
-    execute: convertUnits
+    execute: convertUnits,
+    type: 'function'
   })

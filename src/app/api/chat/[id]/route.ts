@@ -4,17 +4,7 @@ import { getDatabase } from '@/lib/db'
 import { ChatDb } from '@/types/Chat'
 import { ChatBotDb } from '@/types/ChatBot'
 import { openai } from '@ai-sdk/openai'
-import {
-	CoreAssistantMessage,
-	CoreMessage,
-	CoreTool,
-	CoreToolMessage,
-	CoreUserMessage,
-	generateText,
-	LanguageModelResponseMetadata,
-	LanguageModelUsage,
-	streamText,
-} from 'ai'
+import { CoreTool, Message, streamText } from 'ai'
 import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -43,44 +33,39 @@ export async function GET(
 }
 
 export async function POST(
-	request: NextRequest,
+	req: Request,
 	{ params }: { params: Promise<{ id: string }> }
 ) {
-	const { id: chatId } = await params
+	const { messages }: { messages: Message[] } = await req.json()
+
+	const { id } = await params
+
+	const chatId = new ObjectId(id)
 
 	const db = await getDatabase()
-	const {
-		messages,
-		contactName,
-		stream,
-		allMessages,
-	}: {
-		messages: CoreUserMessage[]
-		contactName?: string
-		stream: boolean
-		allMessages: boolean
-	} = await request.json()
-
-	const chatObjectId = new ObjectId(chatId)
-
 	const chatCollection = db.collection<ChatDb>('chat')
 	const chatBotCollection = db.collection<ChatBotDb>('chatbot')
 
 	const chatResult = await chatCollection.findOne({
-		_id: chatObjectId,
+		_id: chatId,
 	})
 
 	if (chatResult) {
+		await chatCollection.updateOne(
+			{ _id: chatId },
+			{
+				$push: {
+					messages: messages[messages.length - 1],
+				},
+			}
+		)
+
 		const chatBotResult = await chatBotCollection.findOne({
 			_id: chatResult.chatBotId,
 		})
 
 		if (chatBotResult) {
 			const { model, initialPrompt, name, tools: toolsId } = chatBotResult
-
-			const conversation: CoreMessage[] = !allMessages
-				? [...chatResult.messages, ...messages]
-				: messages
 
 			const tools: { [key: string]: CoreTool } = {}
 
@@ -90,92 +75,47 @@ export async function POST(
 				tools[toolId] = tool
 			}
 
-			console.log({ conversation })
-
-			// const aiConfig =
-
-			if (stream) {
-				const result = streamText({
-					model: openai(model),
-					messages: conversation,
-					system: `${name} - ${initialPrompt},
-						${contactName && 'Acualmente estás ayudando a: ' + contactName}`,
-					onFinish: async ({
-						usage,
-						response,
-					}: {
-						usage: LanguageModelUsage
-						response: LanguageModelResponseMetadata & {
-							messages: Array<CoreAssistantMessage | CoreToolMessage>
+			const result = streamText({
+				model: openai(model),
+				system: `${name} - ${initialPrompt}`,
+				messages: messages,
+				onFinish: async ({ text, response, usage }) => {
+					console.log({ text })
+					await chatCollection.updateOne(
+						{ _id: chatId },
+						{
+							$push: {
+								messages: {
+									role: 'assistant',
+									content: text,
+									id: response.messages[response.messages.length - 1].id,
+								},
+							},
+							$inc: {
+								usedTokens: usage.totalTokens,
+							},
 						}
-					}) => {
-						const { messages: aiMessages } = response
-						console.log({ aiMessages })
+					)
+				},
+				tools,
+				maxSteps: 3,
+			})
 
-						await chatCollection.updateOne(
-							{ _id: chatObjectId },
-							{
-								$push: {
-									messages: {
-										$each: [messages[0], ...aiMessages],
-									},
-								},
-								$inc: {
-									usedTokens: usage.totalTokens,
-								},
-							}
-						)
-					},
-					tools,
-					maxSteps: 3,
-				})
-
-				return result.toDataStreamResponse()
-			} else {
-				const { text } = await generateText({
-					model: openai(model),
-					messages: conversation,
-					system: `${name} - ${initialPrompt},
-						${contactName && 'Acualmente estás ayudando a: ' + contactName}`,
-					onStepFinish: async ({
-						usage,
-						response,
-					}: {
-						usage: LanguageModelUsage
-						response: LanguageModelResponseMetadata & {
-							messages: Array<CoreAssistantMessage | CoreToolMessage>
-						}
-					}) => {
-						const { messages: aiMessages } = response
-						console.log({ aiMessages })
-
-						await chatCollection.updateOne(
-							{ _id: chatObjectId },
-							{
-								$push: {
-									messages: {
-										$each: [messages[0], ...aiMessages],
-									},
-								},
-								$inc: {
-									usedTokens: usage.totalTokens,
-								},
-							}
-						)
-					},
-					tools,
-					maxSteps: 3,
-				})
-
-				return NextResponse.json({
-					response: text,
-				})
-			}
+			return result.toDataStreamResponse()
+		} else {
+			return NextResponse.json(
+				{
+					message: 'ChatBot not found',
+				},
+				{
+					status: 404,
+				}
+			)
 		}
 	} else {
 		return NextResponse.json(
 			{
-				msg: 'Chat not founded',
+				message: 'Chat not found',
 			},
 			{
 				status: 404,

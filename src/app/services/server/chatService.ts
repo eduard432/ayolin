@@ -15,30 +15,7 @@ export async function getChatInfo(id: string) {
 	if (chatResult) {
 		const chatBotResult = await chatBotCollection.findOne({ _id: chatResult.chatBotId })
 		if (chatBotResult) {
-			const messages: Message[] = []
-
-			chatResult.messages.forEach(({ role, content }) => {
-				if (role !== 'tool') {
-					const id = new ObjectId().toString()
-					if (typeof content === 'string') {
-						messages.push({
-							role,
-							content,
-							id,
-						})
-					} else {
-						content.forEach((subContent) => {
-							if (subContent.type === 'text' && subContent.text !== '') {
-								messages.push({
-									role,
-									content: subContent.text,
-									id,
-								})
-							}
-						})
-					}
-				}
-			})
+			const messages: Message[] = chatResult.messages
 
 			const result: {
 				chatBot: WithId<ChatBotDb>

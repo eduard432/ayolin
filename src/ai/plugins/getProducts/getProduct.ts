@@ -35,4 +35,5 @@ export const getProductTool = tool({
 			.describe('El nombre del producto o descripcion proporcionada por el usuario'),
 	}),
 	execute: getProduct,
+    type: 'function'
 })
