@@ -1,9 +1,8 @@
-import SignOut from '@/components/signout-button'
 import Link from 'next/link'
 import React from 'react'
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
-import { FaPencil, FaRegMessage, FaRegSquarePlus, FaRegTrashCan } from 'react-icons/fa6'
+import { FaRegSquarePlus } from 'react-icons/fa6'
 import ChatBots from './ChatBots'
 import { getChatbots } from '../services/server/chatbotService'
 
