@@ -3,7 +3,7 @@ import { signIn, providerMap } from "@/auth"
 import { AuthError } from "next-auth"
  
 export default async function LoginPage(props: {
-  searchParams: { callbackUrl: string | undefined }
+  searchParams: { callbackUrl?: string | undefined }
 }) {
   return (
     <main className="flex items-center justify-center bg-neutral-50 text-neutral-950 h-screen">
