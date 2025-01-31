@@ -32,7 +32,7 @@ const ActionMenu = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 					<FaCopy /> Copiar Id
 				</button>
 				<button
-					onClick={() => router.push(`/app/chat/${chatBot.defaultChatId}`)}
+					onClick={() => router.push(`/dashboard/chat/${chatBot.defaultChatId}`)}
 					className="px-2 border border-gray-300 rounded text-sm flex gap-1 items-center">
 					<FaRegMessage />
 					Admin Chat
