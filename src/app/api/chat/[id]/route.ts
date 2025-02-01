@@ -1,4 +1,4 @@
-import { aiPlugins } from '@/ai/plugins'
+import { getAiPlugin } from '@/ai/plugins'
 import { getChatInfo } from '@/app/services/server/chatService'
 import { getDatabase } from '@/lib/db'
 import { ChatDb } from '@/types/Chat'
@@ -78,14 +78,14 @@ export async function POST(
 		})
 
 		if (chatBotResult) {
-			const { model, initialPrompt, name, tools: toolsId } = chatBotResult
+			const { model, initialPrompt, name, tools: toolObjects } = chatBotResult
 
 			const tools: { [key: string]: CoreTool } = {}
 
-			for (let i = 0; i < toolsId.length; i++) {
-				const toolId = toolsId[i]
-				const tool = aiPlugins[toolId]
-				tools[toolId] = tool
+			for (let i = 0; i < toolObjects.length; i++) {
+				const toolObject = toolObjects[i]
+				const tool = getAiPlugin(toolObject.id, toolObject.settings)
+				tools[toolObject.id] = tool
 			}
 
 			const result = streamText({

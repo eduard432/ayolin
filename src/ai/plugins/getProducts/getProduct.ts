@@ -2,9 +2,14 @@ import { tool } from 'ai'
 import { z } from 'zod'
 import { Item } from './types'
 
-const getItemsApi = async (query: string): Promise<Item[]> => {
+const getItemsApi = async (query: string, url: string): Promise<Item[]> => {
+	// const resp = await fetch(
+	// 	`http://localhost:5000/products?${new URLSearchParams({
+	// 		query,
+	// 	})}`
+	// )
 	const resp = await fetch(
-		`http://localhost:5000/products?${new URLSearchParams({
+		`${url}/products?${new URLSearchParams({
 			query,
 		})}`
 	)
@@ -12,8 +17,8 @@ const getItemsApi = async (query: string): Promise<Item[]> => {
 	return data.products
 }
 
-const getProduct = async ({ query }: { query: string }) => {
-	const items = await getItemsApi(query)
+const getProduct = async (query: string, settings: typeof getProductSettings) => {
+	const items = await getItemsApi(query, settings.url)
 	const products: { price: number; name: string }[] = []
 
 	let productStr = ''
@@ -27,13 +32,19 @@ const getProduct = async ({ query }: { query: string }) => {
 	return productStr
 }
 
-export const getProductTool = tool({
-	description: 'Obten producto y su precio en base a una query',
-	parameters: z.object({
-		query: z
-			.string()
-			.describe('El nombre del producto o descripcion proporcionada por el usuario'),
-	}),
-	execute: getProduct,
-    type: 'function'
-})
+export const getProductSettings = {
+	url: ''
+}
+
+export function generateGetProductTool(settings:typeof getProductSettings) {
+	return tool({
+		description: 'Obten producto y su precio en base a una query',
+		parameters: z.object({
+			query: z
+				.string()
+				.describe('El nombre del producto o descripcion proporcionada por el usuario'),
+		}),
+		execute: ({ query }) => getProduct(query, settings),
+		type: 'function',
+	})
+}

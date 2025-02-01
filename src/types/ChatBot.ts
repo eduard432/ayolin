@@ -14,11 +14,18 @@ export interface ChatBotDb extends ChatBot {
     chats: ObjectId[]
 }
 
+export interface ToolSetting {
+    id: string,
+    settings: {
+        [key: string]: string
+    }
+}
+
 export interface ChatBot {
     name: string
     model: string
     initialPrompt: string
-    tools: string[]
+    tools: ToolSetting[]
     usedTokens: {
         input: number,
         output: number

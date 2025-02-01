@@ -1,10 +1,21 @@
 import { CoreTool } from "ai";
-import { getProductTool } from "./getProducts/getProduct";
+import { generateGetProductTool, getProductSettings } from "./getProducts/getProduct";
 import { farenhetToCelsius } from "./farenheitToCelsius/convertGrades";
-import { getWeatherTool } from "./getWeather/getWeather";
+import { generateWeatherTool, getWeatherSettings } from "./getWeather/getWeather";
 
-export const aiPlugins: {[key: string]: CoreTool} = {
-    'get_product': getProductTool,
-    'get_weather': getWeatherTool,
-    'convert_farenheitToCelsius': farenhetToCelsius
+
+export const aiPluginSettings: {[key: string]:  ({[key: string]: string}) | boolean} = {
+    'get_weather': getWeatherSettings,
+    'convert_farenheitToCelsius': false,
+    'get_product':  getProductSettings
 }
+
+export const getAiPlugin = (id: string, settings: {[key: string]: string}) => {
+    const aiPlugins: {[key: string]: CoreTool} = {
+        'get_weather': generateWeatherTool({url: settings.url}),
+        'convert_farenheitToCelsius': farenhetToCelsius,
+        'get_product': generateGetProductTool({url: settings.url})
+    }
+    return aiPlugins[id]
+}
+

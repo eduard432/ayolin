@@ -1,13 +1,13 @@
-import { aiPlugins } from '@/ai/plugins'
+import { aiPluginSettings } from '@/ai/plugins'
 import { getDatabase } from '@/lib/db'
 import { ChatBotDb } from '@/types/ChatBot'
 import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
-	const plugins = Object.keys(aiPlugins)
+
 	return NextResponse.json({
-		plugins,
+		aiPluginSettings,
 	})
 }
 
@@ -20,12 +20,19 @@ export async function POST(request: NextRequest) {
 
 	const query = {
 		_id: chatBotId,
-		tools: { $nin: [plugin] },
+		tools: {
+			$not: {
+				$elemMatch: { id: plugin },
+			},
+		},
 	}
 
 	const update = {
 		$push: {
-			tools: plugin,
+			tools: {
+				id: plugin,
+				settings: {},
+			},
 		},
 	}
 
@@ -60,12 +67,16 @@ export async function DELETE(
 
 	const query = {
 		_id: chatBotId,
-		tools: { $in: [plugin] },
+		tools: {
+			$elemMatch: { id: plugin },
+		},
 	}
 
 	const update = {
 		$pull: {
-			tools: plugin,
+			tools: {
+				id: plugin
+			},
 		},
 	}
 

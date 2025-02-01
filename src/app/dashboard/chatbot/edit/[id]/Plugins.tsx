@@ -1,6 +1,6 @@
 'use client'
 
-import { ChatBotRecord } from '@/types/ChatBot'
+import { ChatBotRecord, ToolSetting } from '@/types/ChatBot'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FaRegSquarePlus, FaRegTrashCan } from 'react-icons/fa6'
 
@@ -36,7 +36,7 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 		if (result.ok) {
 			const newData = {
 				...chatBot,
-				tools: chatBot.tools.filter((tool) => tool !== func),
+				tools: chatBot.tools.filter((tool) => tool.id !== func),
 			}
 			setChatBot(newData)
 		}
@@ -49,7 +49,7 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 	const handleAddFunction = async () => {
 		if (!chatBot) return
 		if (selectedFunc == '') return
-		if (chatBot.tools.includes(selectedFunc)) return
+		if (chatBot.tools.find((tool => tool.id === selectedFunc))) return
 		const result = await fetch(`/api/plugin`, {
 			method: 'POST',
 			headers: {
@@ -63,7 +63,10 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 		if (result.ok) {
 			const newData = {
 				...chatBot,
-				tools: [...chatBot.tools, selectedFunc],
+				tools: [...chatBot.tools, {
+					id: selectedFunc,
+					settings: {}
+				}],
 			}
 			setChatBot(newData)
 			setSelectedFunc('')
@@ -81,7 +84,7 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 					name="connectionType">
 					<option value=""></option>
 					{funcs
-						.filter((func) => !chatBot.tools.includes(func))
+						.filter((func) => !chatBot.tools.find((tool => tool.id === func)))
 						.map((func) => (
 							<option className="capitalize" key={func} value={func}>
 								{func.replaceAll('_', ' ')}
@@ -95,14 +98,14 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 				</button>
 			</div>
 			<div className="divide-y border-y  border-gray-300 px-6">
-				{chatBot.tools.map((toolName) => (
+				{chatBot.tools.map((tool: ToolSetting) => (
 					<span
-						key={toolName}
+						key={tool.id}
 						className="flex items-center gap-2 justify-between py-2 group min-h-12">
-						<p className="w-1/3 capitalize">{toolName.replaceAll('_', ' ')}</p>
+						<p className="w-1/3 capitalize">{tool.id.replaceAll('_', ' ')}</p>
 						<div className="w-1/3 flex justify-end">
 							<button
-								onClick={() => handleDeleteFunction(toolName)}
+								onClick={() => handleDeleteFunction(tool.id)}
 								className="bg-gray-700 text-white rounded-md p-2 hidden group-hover:block">
 								<FaRegTrashCan />
 							</button>
