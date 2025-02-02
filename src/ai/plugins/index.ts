@@ -4,10 +4,24 @@ import { farenhetToCelsius } from "./farenheitToCelsius/convertGrades";
 import { generateWeatherTool, getWeatherSettings } from "./getWeather/getWeather";
 
 
-export const aiPluginSettings: {[key: string]:  ({[key: string]: string}) | boolean} = {
-    'get_weather': getWeatherSettings,
-    'convert_farenheitToCelsius': false,
-    'get_product':  getProductSettings
+export const aiPlugins: {
+    [key: string]: {
+        name: string,
+        settings: ({[key: string]: string})
+    }
+} = {
+    'get_weather': {
+        name: 'Obtener Clima',
+        settings: getWeatherSettings
+    },
+    'convert_farenheitToCelsius': {
+        name: 'Convertir Farenheit a Celsius',
+        settings: {}
+    },
+    'get_product':  {
+        name: 'Producto Zoho',
+        settings: getProductSettings
+    }
 }
 
 export const getAiPlugin = (id: string, settings: {[key: string]: string}) => {

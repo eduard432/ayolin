@@ -2,7 +2,10 @@
 
 import { ChatBotRecord, ToolSetting } from '@/types/ChatBot'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { FaRegSquarePlus, FaRegTrashCan } from 'react-icons/fa6'
+import { FaRegSquarePlus, FaRegTrashCan, FaPencil } from 'react-icons/fa6'
+import AddPluginForm from './AddPluginForm'
+import { aiPlugins } from '@/ai/plugins'
+import EditPluginForm from './EditPluginForm'
 
 type PluginsComponentParams = {
 	chatBot: ChatBotRecord
@@ -10,16 +13,25 @@ type PluginsComponentParams = {
 }
 
 const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
-	const [funcs, setFuncs] = useState<string[]>([])
-	const [selectedFunc, setSelectedFunc] = useState<string>('')
+	const [isOpenDialog, setIsOpenDialog] = useState(false)
+	const [editPlugin, setEditPlugin] = useState('')
+	const [editPluginSettings, setEditPluginSettings] = useState({})
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
-	const handleGetFunctions = async () => {
-		const response = await fetch(`/api/plugin`)
-		if (response.ok) {
-			const data: { plugins: string[] } = await response.json()
-			setFuncs(data.plugins)
-		}
+	const handleSetEditPlugin = (
+		pluginId: string,
+		pluginSettings: { [key: string]: string }
+	) => {
+		setEditPlugin(pluginId)
+		setEditPluginSettings(pluginSettings)
+		setIsEditDialogOpen(true)
 	}
+
+	useEffect(() => {
+		if (!isEditDialogOpen && editPlugin) {
+			setEditPlugin('')
+		}
+	}, [isEditDialogOpen])
 
 	const handleDeleteFunction = async (func: string) => {
 		if (!chatBot) return
@@ -42,57 +54,28 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 		}
 	}
 
-	useEffect(() => {
-		handleGetFunctions()
-	}, [])
-
-	const handleAddFunction = async () => {
-		if (!chatBot) return
-		if (selectedFunc == '') return
-		if (chatBot.tools.find((tool => tool.id === selectedFunc))) return
-		const result = await fetch(`/api/plugin`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				botId: chatBot._id,
-				plugin: selectedFunc,
-			}),
-		})
-		if (result.ok) {
-			const newData = {
-				...chatBot,
-				tools: [...chatBot.tools, {
-					id: selectedFunc,
-					settings: {}
-				}],
-			}
-			setChatBot(newData)
-			setSelectedFunc('')
-		}
-	}
-
 	return (
 		<section>
 			<h4 className="text-xl font-semibold my-2">Funciones:</h4>
-			<div className="my-4 flex">
-				<select
-					value={selectedFunc}
-					onChange={(event) => setSelectedFunc(event.target.value)}
-					className="px-2 py-1 border rounded border-gray-300 min-w-40 capitalize"
-					name="connectionType">
-					<option value=""></option>
-					{funcs
-						.filter((func) => !chatBot.tools.find((tool => tool.id === func)))
-						.map((func) => (
-							<option className="capitalize" key={func} value={func}>
-								{func.replaceAll('_', ' ')}
-							</option>
-						))}
-				</select>
+			<div className="my-4">
+				{editPlugin && (
+					<EditPluginForm
+						chatBot={chatBot}
+						setChatBot={setChatBot}
+						isOpenDialog={isEditDialogOpen}
+						setIsOpenDialog={setIsEditDialogOpen}
+						pluginId={editPlugin}
+						settings={editPluginSettings}
+					/>
+				)}
+				<AddPluginForm
+					chatBot={chatBot}
+					setChatBot={setChatBot}
+					isOpenDialog={isOpenDialog}
+					setIsOpenDialog={setIsOpenDialog}
+				/>
 				<button
-					onClick={() => handleAddFunction()}
+					onClick={() => setIsOpenDialog(true)}
 					className="bg-black text-white px-3 py-1 text-sm rounded mx-2 flex items-center gap-1">
 					<FaRegSquarePlus /> Agregar funcion
 				</button>
@@ -102,11 +85,18 @@ const Plugins = ({ chatBot, setChatBot }: PluginsComponentParams) => {
 					<span
 						key={tool.id}
 						className="flex items-center gap-2 justify-between py-2 group min-h-12">
-						<p className="w-1/3 capitalize">{tool.id.replaceAll('_', ' ')}</p>
-						<div className="w-1/3 flex justify-end">
+						<p className="w-1/3 capitalize">{aiPlugins[tool.id].name}</p>
+						<div className="w-1/3 flex justify-end gap-x-1">
+							{Object.keys(tool.settings).length > 0 && (
+								<button
+									onClick={() => handleSetEditPlugin(tool.id, tool.settings)}
+									className="bg-gray-900 text-white rounded-md p-2 hidden group-hover:block">
+									<FaPencil />
+								</button>
+							)}
 							<button
 								onClick={() => handleDeleteFunction(tool.id)}
-								className="bg-gray-700 text-white rounded-md p-2 hidden group-hover:block">
+								className="bg-red-700 text-white rounded-md p-2 hidden group-hover:block">
 								<FaRegTrashCan />
 							</button>
 						</div>

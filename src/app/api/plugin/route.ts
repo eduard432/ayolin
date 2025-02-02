@@ -1,18 +1,74 @@
-import { aiPluginSettings } from '@/ai/plugins'
+import { aiPlugins } from '@/ai/plugins'
 import { getDatabase } from '@/lib/db'
-import { ChatBotDb } from '@/types/ChatBot'
+import { ChatBotDb, ToolSetting } from '@/types/ChatBot'
 import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
-
 	return NextResponse.json({
-		aiPluginSettings,
+		aiPlugins,
 	})
 }
 
+export async function PUT(request: NextRequest) {
+	const {
+		botId,
+		updatedPlugins,
+		plugin
+	}: {
+		botId: string
+		updatedPlugins: ToolSetting[]
+		plugin: string
+	} = await request.json()
+
+	const db = await getDatabase()
+	const chatBotCollection = db.collection<ChatBotDb>('chatbot')
+	const chatBotId = new ObjectId(botId)
+
+	const query = {
+		_id: chatBotId,
+		tools: {
+			$elemMatch: { id: plugin },
+		},
+	}
+
+	const update = {
+		$set: {
+			tools: updatedPlugins
+		}
+	}
+
+	const result = await chatBotCollection.updateOne(query, update)
+
+	const res = NextResponse
+	if (result.modifiedCount > 0) {
+		return res.json({
+			msg: 'Plugin Updated',
+		})
+	} else {
+		return res.json(
+			{
+				msg: 'Error updating Plugin',
+			},
+			{
+				status: 500,
+			}
+		)
+	}
+}
+
 export async function POST(request: NextRequest) {
-	const { botId, plugin }: { botId: string; plugin: string } = await request.json()
+	const {
+		botId,
+		plugin,
+		settings,
+	}: {
+		botId: string
+		plugin: string
+		settings: {
+			[key: string]: string
+		}
+	} = await request.json()
 
 	const db = await getDatabase()
 	const chatBotCollection = db.collection<ChatBotDb>('chatbot')
@@ -31,7 +87,7 @@ export async function POST(request: NextRequest) {
 		$push: {
 			tools: {
 				id: plugin,
-				settings: {},
+				settings,
 			},
 		},
 	}
@@ -75,7 +131,7 @@ export async function DELETE(
 	const update = {
 		$pull: {
 			tools: {
-				id: plugin
+				id: plugin,
 			},
 		},
 	}
