@@ -3,11 +3,6 @@ import { z } from 'zod'
 import { Item } from './types'
 
 const getItemsApi = async (query: string, url: string): Promise<Item[]> => {
-	// const resp = await fetch(
-	// 	`http://localhost:5000/products?${new URLSearchParams({
-	// 		query,
-	// 	})}`
-	// )
 	const resp = await fetch(
 		`${url}/products?${new URLSearchParams({
 			query,
