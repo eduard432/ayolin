@@ -112,11 +112,6 @@ const ChatBotCard = ({
 					<p className="text-sm font-semibold">Model: {chatbot.model}</p>
 				</div>
 			</CardContent>
-			<CardFooter>
-				<Button variant="outline" asChild className="w-full">
-					<Link href={`/chatbot/${chatbot.id}`}>View Details</Link>
-				</Button>
-			</CardFooter>
 		</Card>
 	)
 }
