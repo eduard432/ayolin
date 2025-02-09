@@ -8,15 +8,11 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import {
-	Book,
-	Bot,
-	HandCoins,
-	MessageSquareHeart,
-	Notebook,
-	Search,
-} from 'lucide-react'
+import { Book, Bot, HandCoins, MessageSquareHeart, Notebook, Search } from 'lucide-react'
 import { ChatBotCard } from './ChatBotCard'
+import { auth } from '@/auth'
+import { getChatbots } from '@/app/services/server/chatbotService'
+import { redirect } from 'next/navigation'
 
 const chatbots = [
 	{
@@ -45,9 +41,12 @@ const chatbots = [
 	},
 ]
 
+export default async function Page() {
+	const session = await auth()
 
+	if (!session?.user || !session.user.id) return redirect('/')
+	const chatBots = await getChatbots(session.user.id)
 
-export default function Page() {
 	return (
 		<>
 			<Header title="Chat Bots" />
@@ -86,7 +85,7 @@ export default function Page() {
 			</section>
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
 				<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-					{chatbots.map((chatbot) => (
+					{chatBots.map((chatbot) => (
 						<ChatBotCard chatbot={chatbot} />
 					))}
 

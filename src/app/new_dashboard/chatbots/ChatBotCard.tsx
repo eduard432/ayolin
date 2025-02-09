@@ -12,30 +12,26 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { CheckCircle2, MoreVertical, XCircle } from 'lucide-react'
+import {
+	CheckCircle2,
+	MessageSquare,
+	MessagesSquare,
+	MoreVertical,
+	XCircle,
+} from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { ChatBotRecord } from '@/types/ChatBot'
 
-export const ChatBotCard = ({
-	chatbot,
-}: {
-	chatbot: {
-		id: string
-		name: string
-		status: string
-		description: string
-		createdAt: string
-		model: string
-	}
-}) => {
+export const ChatBotCard = ({ chatbot }: { chatbot: ChatBotRecord }) => {
 	return (
-		<Link href={`/dashboard/edit/${chatbot.id}`}>
-			<Card key={chatbot.id} className="flex flex-col">
+		<Link href={`/dashboard/chatbot/edit/${chatbot._id}`}>
+			<Card key={chatbot._id} className="flex flex-col">
 				<CardHeader>
 					<div className="flex justify-between items-start">
 						<div className="flex items-center space-x-2">
 							<CardTitle className="text-xl">{chatbot.name}</CardTitle>
-							{chatbot.status === 'active' ? (
+							{'active' === 'active' ? (
 								<CheckCircle2 className="h-5 w-5 text-green-500" />
 							) : (
 								<XCircle className="h-5 w-5 text-red-500" />
@@ -50,24 +46,31 @@ export const ChatBotCard = ({
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
 								<DropdownMenuItem>
-									<Link href={`/chatbot/${chatbot.id}/edit`}>Edit</Link>
+									<Link href={`/chatbot/${chatbot._id}/edit`}>Edit</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem>
-									<Link href={`/chatbot/${chatbot.id}/analytics`}>View Analytics</Link>
+									<Link href={`/chatbot/${chatbot._id}/analytics`}>View Analytics</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
-					<CardDescription className="h-4 overflow-hidden">
-						{chatbot.description}
+					<CardDescription>
+						<p className="overflow-hidden h-4">{chatbot.initialPrompt}</p>
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex-grow">
 					<div className="flex justify-between">
-						<p className="text-sm text-gray-500">
-							Created: {new Date(chatbot.createdAt).toLocaleDateString()}
-						</p>
+						<div className="flex gap-2">
+							<p className="text-gray-500 flex items-center">
+								<MessageSquare className="h-4" />
+								<span>{chatbot.totalMessages}</span>
+							</p>
+							<p className="text-gray-500 flex items-center">
+								<MessagesSquare className="h-4" />
+								<span>{chatbot.chats.length}</span>
+							</p>
+						</div>
 						<p className="text-sm font-semibold">Model: {chatbot.model}</p>
 					</div>
 				</CardContent>
