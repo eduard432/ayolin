@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
-import { NavProjects } from '@/components/nav-projects'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
 import {
@@ -72,23 +71,9 @@ const data = {
 			],
 		},
 		{
-			title: 'Models',
-			url: '#',
+			title: 'Chatbots',
+			url: 'chatbots',
 			icon: Bot,
-			items: [
-				{
-					title: 'Genesis',
-					url: '#',
-				},
-				{
-					title: 'Explorer',
-					url: '#',
-				},
-				{
-					title: 'Quantum',
-					url: '#',
-				},
-			],
 		},
 		{
 			title: 'Documentation',
@@ -172,7 +157,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
 			</SidebarHeader>
 			<SidebarContent>
 				<NavMain items={data.navMain} />
-				<NavProjects projects={data.projects} />
+				{/* <NavProjects projects={data.projects} /> */}
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser user={user} />
