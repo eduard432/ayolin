@@ -72,7 +72,7 @@ const data = {
 		},
 		{
 			title: 'Chatbots',
-			url: 'chatbots',
+			url: 'chatbot',
 			icon: Bot,
 		},
 		{
