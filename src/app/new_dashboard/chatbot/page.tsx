@@ -49,7 +49,7 @@ export default async function Page() {
 
 	return (
 		<main>
-			<Header title="Chat Bots" />
+			<Header title={{content: 'Chat Bots'}} />
 			<section className="p-4 pt-0 flex w-full max-w-2xl items-center space-x-2">
 				<div className="w-full relative">
 					<Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />

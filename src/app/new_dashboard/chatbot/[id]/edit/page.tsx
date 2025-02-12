@@ -14,7 +14,10 @@ export default async function page({ params }: { params: Promise<{ id: string }>
 
 	return (
 		<main>
-			<Header title="Chat Bot" subTitle={chatBot.name} />
+			<Header title={{
+				content: 'Chat Bot',
+				url: '/new_dashboard/chatbot'
+			}} subTitle={chatBot.name} />
 			<section className="p-4">
 				<h3 className="text-4xl font-semibold">{chatBot.name}</h3>
 				<Tabs defaultValue="activity" className="mt-4">

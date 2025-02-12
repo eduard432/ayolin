@@ -9,12 +9,18 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from './ui/sidebar'
+import Link from 'next/link'
 
 const Header = ({
-	title = 'Building Your Application',
+	title = {
+		content: 'Building Your Application',
+	},
 	subTitle,
 }: {
-	title?: string
+	title: {
+		content: string
+		url?: string
+	}
 	subTitle?: string
 }) => {
 	return (
@@ -25,7 +31,13 @@ const Header = ({
 				<Breadcrumb>
 					<BreadcrumbList>
 						<BreadcrumbItem className="hidden md:block">
-							<BreadcrumbLink href="#">{title}</BreadcrumbLink>
+							<BreadcrumbLink asChild>
+								{title.url ? (
+									<Link href={title.url}>{title.content}</Link>
+								) : (
+									<span>{title.content}</span>
+								)}
+							</BreadcrumbLink>
 						</BreadcrumbItem>
 						{subTitle && (
 							<>
