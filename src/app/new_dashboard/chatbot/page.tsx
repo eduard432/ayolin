@@ -48,7 +48,7 @@ export default async function Page() {
 	const chatBots = await getChatbots(session.user.id)
 
 	return (
-		<>
+		<main>
 			<Header title="Chat Bots" />
 			<section className="p-4 pt-0 flex w-full max-w-2xl items-center space-x-2">
 				<div className="w-full relative">
@@ -95,6 +95,6 @@ export default async function Page() {
 				</div>
 				<div className="min-h-[100vh] flex-1 rounded-xl bg-zinc-100/50 md:min-h-min dark:bg-zinc-800/50" />
 			</section>
-		</>
+		</main>
 	)
 }

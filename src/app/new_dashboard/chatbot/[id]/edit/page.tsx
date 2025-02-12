@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { notFound } from 'next/navigation'
 import React from 'react'
 import { Activity } from './Activity'
+import { Settings } from './Settings'
+import { Tools } from './Tools'
 
 export default async function page({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params
@@ -11,7 +13,7 @@ export default async function page({ params }: { params: Promise<{ id: string }>
 	if (!chatBot) return notFound()
 
 	return (
-		<>
+		<main>
 			<Header title="Chat Bot" subTitle={chatBot.name} />
 			<section className="p-4">
 				<h3 className="text-4xl font-semibold">{chatBot.name}</h3>
@@ -19,13 +21,15 @@ export default async function page({ params }: { params: Promise<{ id: string }>
 					<TabsList>
 						<TabsTrigger value="activity">Activity</TabsTrigger>
 						<TabsTrigger value="settings">Settings</TabsTrigger>
+						<TabsTrigger value="tools">Tools</TabsTrigger>
 						<TabsTrigger value="chats">Chats</TabsTrigger>
 						<TabsTrigger value="content">Content</TabsTrigger>
 					</TabsList>
 					<TabsContent value="activity"><Activity /></TabsContent>
-					<TabsContent value="settings">Change your password here.</TabsContent>
+					<TabsContent value="settings"><Settings /></TabsContent>
+					<TabsContent value="tools"><Tools /></TabsContent>
 				</Tabs>
 			</section>
-		</>
+		</main>
 	)
 }
