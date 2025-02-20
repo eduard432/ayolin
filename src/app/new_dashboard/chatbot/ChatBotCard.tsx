@@ -25,7 +25,7 @@ import { ChatBotRecord } from '@/types/ChatBot'
 
 export const ChatBotCard = ({ chatbot }: { chatbot: ChatBotRecord }) => {
 	return (
-		<Link key={chatbot._id} href={`/new_dashboard/chatbot/${chatbot._id}/edit`}>
+		<Link href={`/new_dashboard/chatbot/${chatbot._id}/edit`}>
 			<Card className="flex flex-col">
 				<CardHeader>
 					<div className="flex justify-between items-start">

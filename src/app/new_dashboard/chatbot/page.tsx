@@ -86,7 +86,7 @@ export default async function Page() {
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
 				<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
 					{chatBots.map((chatbot) => (
-						<ChatBotCard chatbot={chatbot} />
+						<ChatBotCard key={chatbot._id} chatbot={chatbot} />
 					))}
 
 					<div className=" rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
