@@ -12,7 +12,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { MessageSquare, MoreVertical } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { MessageSquare, MoreVertical, Search } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -100,31 +101,25 @@ const ToolCard = ({
 					<p className="overflow-hidden h-4">{tool.description}</p>
 				</CardDescription>
 			</CardHeader>
-			<CardContent className="flex-grow">
-				{/* <div className="flex justify-between">
-                <div className="flex gap-2">
-                    <p className="text-gray-500 flex items-center">
-                        <MessageSquare className="h-4" />
-                        <span>{chatbot.totalMessages}</span>
-                    </p>
-                    <p className="text-gray-500 flex items-center">
-                        <MessagesSquare className="h-4" />
-                        <span>{chatbot.chats.length}</span>
-                    </p>
-                </div>
-                <p className="text-sm font-semibold">Model: {chatbot.model}</p>
-            </div> */}
-			</CardContent>
 		</Card>
 	)
 }
 
 export const Tools = () => {
 	return (
-		<div className="max-w-7xl grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-			{toolsExample.map((tool) => (
-				<ToolCard tool={tool} />
-			))}
+		<div className="max-w-7xl flex flex-col gap-4">
+			<section className="flex w-full max-w-2xl items-center space-x-2">
+				<div className="w-full relative">
+					<Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+					<Input type="text" placeholder="Search for Tools" className="pl-8" />
+				</div>
+				<Button>Add Tool</Button>
+			</section>
+			<section className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4" >
+				{toolsExample.map((tool) => (
+					<ToolCard tool={tool} />
+				))}
+			</section>
 		</div>
 	)
 }
