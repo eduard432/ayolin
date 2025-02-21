@@ -6,6 +6,7 @@ import React from 'react'
 import { Activity } from './Activity'
 import { Settings } from './Settings'
 import { Tools } from './Tools'
+import { Chats } from './Chats'
 
 export default async function page({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params
@@ -31,6 +32,7 @@ export default async function page({ params }: { params: Promise<{ id: string }>
 					<TabsContent value="activity"><Activity /></TabsContent>
 					<TabsContent value="settings"><Settings /></TabsContent>
 					<TabsContent value="tools"><Tools /></TabsContent>
+					<TabsContent value="chats"><Chats /></TabsContent>
 				</Tabs>
 			</section>
 		</main>
