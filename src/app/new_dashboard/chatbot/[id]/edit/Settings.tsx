@@ -9,19 +9,82 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { ChatBotRecord } from '@/types/ChatBot'
 import MDEditor from '@uiw/react-md-editor'
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
-export const Settings = () => {
+type InputData = {
+	name: string
+	initialPrompt: string
+}
+
+type SettingsComponentParams = {
+	chatBot: ChatBotRecord
+	setChatBot: Dispatch<SetStateAction<ChatBotRecord>>
+}
+
+export const Settings = ({ chatBot, setChatBot }: SettingsComponentParams) => {
+	const {
+		getValues,
+		setValue,
+		register,
+		handleSubmit,
+		reset,
+		watch,
+		formState: { errors },
+	} = useForm<InputData>({
+		defaultValues: {
+			initialPrompt: '',
+			name: '',
+		},
+		values: {
+			name: chatBot?.name || '',
+			initialPrompt: chatBot?.initialPrompt || '',
+		},
+		mode: 'onBlur',
+	})
+
+	const currentValues = watch()
+
+	const hasChanges =
+		JSON.stringify({ name: chatBot.name, initialPrompt: chatBot?.initialPrompt }) ==
+		JSON.stringify(currentValues)
+
+	const onSubmit: SubmitHandler<InputData> = async (inputData) => {
+		const result = await fetch(`/api/chatbot/${chatBot._id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(inputData),
+		})
+		if (result.ok && chatBot) {
+			const { initialPrompt, name } = inputData
+			const newData = { ...chatBot, initialPrompt, name }
+			setChatBot(newData)
+		}
+	}
+
 	return (
-		<form className="max-w-2xl grid gap-4">
+		<form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl grid gap-4">
 			<div className="grid gap-2">
 				<Label htmlFor="name">Name:</Label>
-				<Input name="name" type="text" />
+				<Input
+					{...register('name', {
+						required: {
+							message: 'Este campo es requerido',
+							value: true,
+						},
+					})}
+					name="name"
+					type="text"
+				/>
+				 <p className="text-sm text-red-700 min-h-5">{errors.name?.message}</p>
 			</div>
 			<div className="grid gap-2">
 				<Label htmlFor="model">Model:</Label>
-				<Select defaultValue="gpt-3.5-turbo">
+				<Select disabled defaultValue="gpt-3.5-turbo">
 					<SelectTrigger className="w-[180px]">
 						<SelectValue placeholder="Select:" />
 					</SelectTrigger>
@@ -33,14 +96,26 @@ export const Settings = () => {
 					</SelectContent>
 				</Select>
 			</div>
-			<div className="grid gap-2" >
-        <Label htmlFor="initialPrompt">Initial Prompt:</Label>
-				<Textarea rows={3} name="initialPrompt" />
+			<div className="grid gap-2">
+				<Label htmlFor="initialPrompt">Initial Prompt:</Label>
+				<Textarea
+					{...register('initialPrompt', {
+						required: {
+							message: 'Este campo es requerido',
+							value: true,
+						},
+					})}
+					rows={10	}
+					name="initialPrompt"
+				/>
+				<p className="text-sm text-red-700 min-h-5">{errors.initialPrompt?.message}</p>
 			</div>
-      <div className="flex gap-2 justify-end">
-        <Button variant="secondary" >Descartar</Button>
-        <Button>Guardar</Button>
-      </div>
+			<div className="flex gap-2 justify-end">
+				<Button onClick={() => reset()} disabled={hasChanges} variant="secondary">
+					Descartar
+				</Button>
+				<Button type="submit" disabled={hasChanges}>Guardar</Button>
+			</div>
 		</form>
 	)
 }
