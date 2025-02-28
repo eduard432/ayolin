@@ -29,10 +29,10 @@ const TabsClient = ({chatBot: defaultChatBot}: {chatBot: ChatBotRecord}) => {
 				<Settings chatBot={chatBot} setChatBot={setChatbot} />
 			</TabsContent>
 			<TabsContent value="tools">
-				<Tools />
+				<Tools chatBot={chatBot} />
 			</TabsContent>
 			<TabsContent value="chats">
-				<Chats />
+				<Chats chatBot={chatBot} />
 			</TabsContent>
 		</Tabs>
 	)

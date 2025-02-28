@@ -1,3 +1,4 @@
+import { aiPlugins } from '@/ai/plugins'
 import { Button } from '@/components/ui/button'
 import {
 	Card,
@@ -13,6 +14,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import { ChatBotRecord, ToolSetting } from '@/types/ChatBot'
 import { MessageSquare, MoreVertical, Search } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -70,14 +72,14 @@ const toolsExample: { name: string; description: string; id: number }[] = [
 const ToolCard = ({
 	tool,
 }: {
-	tool: { name: string; id: number; description: string }
+	tool: ToolSetting
 }) => {
 	return (
 		<Card key={tool.id} className="flex flex-col">
 			<CardHeader>
 				<div className="flex justify-between items-start">
 					<div className="flex items-center space-x-2">
-						<CardTitle className="text-xl">{tool.name}</CardTitle>
+						<CardTitle className="text-xl">{aiPlugins[tool.id].name}</CardTitle>
 					</div>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
@@ -98,14 +100,14 @@ const ToolCard = ({
 					</DropdownMenu>
 				</div>
 				<CardDescription>
-					<p className="overflow-hidden h-4">{tool.description}</p>
+					<p className="font mono">{tool.id}</p>
 				</CardDescription>
 			</CardHeader>
 		</Card>
 	)
 }
 
-export const Tools = () => {
+export const Tools = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 	return (
 		<div className="max-w-7xl flex flex-col gap-4">
 			<section className="flex w-full max-w-2xl items-center space-x-2">
@@ -115,8 +117,8 @@ export const Tools = () => {
 				</div>
 				<Button>Add Tool</Button>
 			</section>
-			<section className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4" >
-				{toolsExample.map((tool) => (
+			<section className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+				{chatBot.tools.map((tool) => (
 					<ToolCard key={tool.id} tool={tool} />
 				))}
 			</section>
