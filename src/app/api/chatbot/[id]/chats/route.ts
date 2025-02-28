@@ -26,9 +26,6 @@ export async function GET(
 	])
 
 	const chats = await chatResult.toArray()
-
-	console.log({chats})
-
 	return NextResponse.json({
 		chats,
 	})
