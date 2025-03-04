@@ -48,8 +48,8 @@ export default async function Page() {
 	const chatBots = await getChatbots(session.user.id)
 
 	return (
-		<>
-			<Header title="Chat Bots" />
+		<main>
+			<Header title={{content: 'Chat Bots'}} />
 			<section className="p-4 pt-0 flex w-full max-w-2xl items-center space-x-2">
 				<div className="w-full relative">
 					<Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
@@ -86,7 +86,7 @@ export default async function Page() {
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
 				<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
 					{chatBots.map((chatbot) => (
-						<ChatBotCard chatbot={chatbot} />
+						<ChatBotCard key={chatbot._id} chatbot={chatbot} />
 					))}
 
 					<div className=" rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
@@ -95,6 +95,6 @@ export default async function Page() {
 				</div>
 				<div className="min-h-[100vh] flex-1 rounded-xl bg-zinc-100/50 md:min-h-min dark:bg-zinc-800/50" />
 			</section>
-		</>
+		</main>
 	)
 }

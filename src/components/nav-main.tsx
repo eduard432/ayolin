@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/sidebar'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 export function NavMain({
 	items,
@@ -63,9 +64,9 @@ export function NavMain({
 													<SidebarMenuSubButton
 														className={cn(pathname.split('/').includes(item.url) && 'bg-zinc-200')}
 														asChild>
-														<a href={subItem.url}>
-															<span>{subItem.title}</span>
-														</a>
+														<Link href={`/new_dashboard/${subItem.url}`}>
+															{subItem.title}
+														</Link>
 													</SidebarMenuSubButton>
 												</SidebarMenuSubItem>
 											))}
@@ -74,10 +75,10 @@ export function NavMain({
 								</>
 							) : (
 								<SidebarMenuButton
+									asChild
 									className={cn(pathname.split('/').includes(item.url) && 'bg-zinc-200')}
 									tooltip={item.title}>
-									{item.icon && <item.icon />}
-									<span>{item.title}</span>
+									<Link href={`/new_dashboard/${item.url}`}>{item.icon && <item.icon />}{item.title}</Link>
 								</SidebarMenuButton>
 							)}
 						</SidebarMenuItem>

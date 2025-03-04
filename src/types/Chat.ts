@@ -11,4 +11,7 @@ export interface ChatDb extends Chat {
 
 export interface Chat {
     messages: Message[]
+    name?: string,
+    lastActive?: Date,
+    
 }
