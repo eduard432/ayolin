@@ -1,4 +1,4 @@
-export const MODELS: {
+export const AI_MODELS: {
     [key: string]: [number, number]
 } = {
     'gpt-3.5-turbo': [0.5, 1.5],

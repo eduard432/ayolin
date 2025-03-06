@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import ForwardButton from '@/components/client/ForwardButton'
-import { MODELS } from '@/lib/MODELS'
+import { AI_MODELS } from '@/lib/aiModels'
 
 type InputData = {
 	name: string
@@ -71,7 +71,7 @@ export default function Form({ userId }: { userId: string }) {
 							})}
 							className="px-2 py-1 border rounded border-gray-300"
 							name="model">
-							{Object.keys(MODELS).map((model) => (
+							{Object.keys(AI_MODELS).map((model) => (
 								<option>{model}</option>
 							))}
 						</select>

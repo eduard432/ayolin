@@ -1,4 +1,4 @@
-import { MODELS } from '@/lib/MODELS'
+import { AI_MODELS } from '@/lib/aiModels'
 import { ChatBotRecord } from '@/types/ChatBot'
 
 const Stat = ({ value, name }: { value: number; name: string }) => {
@@ -35,18 +35,18 @@ const Stats = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 						<p className="text-neutral-500">Input:</p>
 						<p className="font-mono">
 							<span className="bg-neutral-300 px-2 rounded">
-								${MODELS[model][0]} USD / 1M tkns
+								${AI_MODELS[model][0]} USD / 1M tkns
 							</span>{' '}
 							=&gt;{' '}
 							<span className="bg-neutral-300 px-2 rounded">
-								{(MODELS[model][0] / 1000000).toLocaleString('es-Mx', {
+								{(AI_MODELS[model][0] / 1000000).toLocaleString('es-Mx', {
 									notation: 'compact',
 								})}
 							</span>{' '}
 							* <span className="bg-sky-200 px-2 rounded">{usedTokens.input} tkn</span>{' '}={' '}
 							<span className="bg-neutral-800 text-neutral-50 px-2 rounded">
 								$
-								{((MODELS[model][0] / 1000000) * usedTokens.input).toLocaleString(
+								{((AI_MODELS[model][0] / 1000000) * usedTokens.input).toLocaleString(
 									'es-Mx',
 									{
 										notation: 'compact',
@@ -60,18 +60,18 @@ const Stats = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 						<p className="text-neutral-500">Output:</p>
 						<p className="font-mono">
 							<span className="bg-neutral-300 px-2 rounded">
-								${MODELS[model][1]} USD / 1M tkns
+								${AI_MODELS[model][1]} USD / 1M tkns
 							</span>{' '}
 							=&gt;{' '}
 							<span className="bg-neutral-300 px-2 rounded">
-								{(MODELS[model][1] / 1000000).toLocaleString('es-Mx', {
+								{(AI_MODELS[model][1] / 1000000).toLocaleString('es-Mx', {
 									notation: 'compact',
 								})}
 							</span>{' '}
 							* <span className="bg-sky-200 px-2 rounded">{usedTokens.output} tkn</span>{' '}={' '}
 							<span className="bg-neutral-800 text-neutral-50 px-2 rounded">
 								$
-								{((MODELS[model][1] / 1000000) * usedTokens.output).toLocaleString(
+								{((AI_MODELS[model][1] / 1000000) * usedTokens.output).toLocaleString(
 									'es-Mx',
 									{
 										notation: 'compact',
