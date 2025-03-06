@@ -34,7 +34,7 @@ export const getAiPlugin = (id: string, settings: {[key: string]: string}) => {
         'get_weather': generateWeatherTool({url: settings.url}),
         'convert_farenheitToCelsius': farenhetToCelsius,
         'get_product': generateGetProductTool({url: settings.url}),
-        'get_context': generateGetContextTool({url: settings.url})
+        'get_context': generateGetContextTool({bookId: settings.bookId})
     }
     return aiPlugins[id]
 }
