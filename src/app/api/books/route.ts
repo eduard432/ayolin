@@ -1,16 +1,32 @@
 import { generateMd } from '@/ai/utils/books'
-import { uploadFile } from '@/lib/cloudinary'
 import { getDatabase } from '@/lib/db'
+import { chunk } from '@/lib/utils'
 import { BookChunkDb, BookDb } from '@/types/Books'
 import { openai } from '@ai-sdk/openai'
 import { embedMany } from 'ai'
 import { Db, ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
-import { PDFDocument } from 'pdf-lib'
 import { Resend } from 'resend'
 
 const IMAGE_URL = (publicId: string, page: number = 1) =>
 	`https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/pg_${page}/q_auto/${publicId}.jpeg`
+
+const preLoadImages = async (publicId: string, pages: number) => {
+	const imageRequests = Array.from({ length: pages }, (_, p) =>
+		fetch(IMAGE_URL(publicId, p + 1))
+	)
+
+	const imageChunkRequests = chunk(imageRequests, 10)
+
+	await Promise.all(imageChunkRequests.map(async (chunk, i) => {
+		const results = await Promise.allSettled(chunk);
+		results.forEach((result, index) => {
+			if (result.status === "rejected") {
+				console.log(`⚠️ Error cargando imagen ${i * 10 + index + 1}:`, result.reason);
+			}
+		});
+	}));
+}
 
 const getCunks = async (publicId: string, pages: number) => {
 	let chunks: { content: string; page: number }[] = []
@@ -49,59 +65,71 @@ const saveEmbeddings = async (bookChunks: BookChunkDb[], db: Db) => {
 
 const processBook = async (
 	bookId: ObjectId,
-	cloudinaryId: string,
+	publicId: string,
 	pages: number,
 	fileName: string
 ) => {
-	const chunks = (await getCunks(cloudinaryId, pages)).filter((e) => e)
+	const resend = new Resend(process.env.RESEND_TOKEN)
+	try {
+		// Preload PDF Images:
+		await preLoadImages(publicId, pages)
 
-	const { embeddings } = await embedMany({
-		model: openai.embedding('text-embedding-3-large'),
-		values: chunks.map((chunk) => chunk.content),
-	})
+		const chunks = (await getCunks(publicId, pages)).filter((e) => e)
 
-	const bookChunks = embeddings.map((embedding, i) => ({
-		...chunks[i],
-		embedding,
-		bookId,
-		chunk: i,
-	}))
+		const { embeddings } = await embedMany({
+			model: openai.embedding('text-embedding-3-large'),
+			values: chunks.map((chunk) => chunk.content),
+		})
 
-	const db = await getDatabase()
+		const bookChunks = embeddings.map((embedding, i) => ({
+			...chunks[i],
+			embedding,
+			bookId,
+			chunk: i,
+		}))
 
-	const embeddingResult = await saveEmbeddings(bookChunks, db)
+		const db = await getDatabase()
 
-	const bookCollection = db.collection<BookDb>('books')
+		const embeddingResult = await saveEmbeddings(bookChunks, db)
 
-	const result = await bookCollection.insertOne({
-		_id: bookId,
-		pages,
-		name: fileName,
-		bookChunks: Object.values(embeddingResult.insertedIds),
-		chunks: chunks.length,
-		status: 'ready',
-	})
+		const bookCollection = db.collection<BookDb>('books')
 
-	if (result.insertedId) {
-		const resend = new Resend(process.env.RESEND_TOKEN)
+		const result = await bookCollection.insertOne({
+			_id: bookId,
+			pages,
+			name: fileName,
+			bookChunks: Object.values(embeddingResult.insertedIds),
+			chunks: chunks.length,
+			status: 'ready',
+		})
 
+		if (result.insertedId) {
+			await resend.emails.send({
+				from: 'Acme <onboarding@resend.dev>',
+				to: ['juantokx@gmail.com'],
+				subject: 'Vectorizado de PDF terminado',
+				html: `<p>Tu archivo <strong>${fileName}.pdf</strong> ha terminado de vectorizarse, id: <strong>${bookId}</strong> </p>`,
+			})
+		} else throw Error('Server error')
+	} catch (error) {
+		console.log(error)
 		await resend.emails.send({
 			from: 'Acme <onboarding@resend.dev>',
 			to: ['juantokx@gmail.com'],
-			subject: 'Vectorizado de PDF terminado',
-			html: `<p>Tu archivo <strong>${fileName}.pdf</strong> ha terminado de vectorizarse, id: <strong>${bookId}</strong> </p>`,
+			subject: 'Vectorizado de PDF ha fallado',
+			html: `<p>Tu archivo <strong>${fileName}.pdf</strong> tuvo un error al vectorizarse, id: <strong>${bookId}</strong> </p>`,
 		})
-	} else throw Error('Server error')
+	}
 }
 
-type BodyData = { pages: number; cloudinaryId: string; fileName: string }
+type BodyData = { pages: number; publicId: string; fileName: string }
 
 export async function POST(request: NextRequest) {
 	try {
 		const bookId = new ObjectId()
-		const { pages, cloudinaryId, fileName }: BodyData = await request.json()
+		const { pages, publicId, fileName }: BodyData = await request.json()
 
-		processBook(bookId, cloudinaryId, pages, fileName)
+		processBook(bookId, publicId, pages, fileName)
 
 		return NextResponse.json({
 			msg: 'Processing book... you will notified at your email',
