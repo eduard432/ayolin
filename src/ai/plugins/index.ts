@@ -24,7 +24,7 @@ export const aiPlugins: {
         settings: getProductSettings
     },
     'get_context': {
-        name: 'Contexto Manifiesto Comunista',
+        name: 'Obten Contexto de PDFs',
         settings: getContextSettings
     }
 }

@@ -6,15 +6,19 @@ export const getContextSettings = {
 }
 
 const getContext = async (query: string, settings: typeof getContextSettings) => {
-	const resp = await fetch(
-		`/api/books/search/${settings.bookId}?${new URLSearchParams({
-			q: query,
-		})}`
-	)
-	const { context }: { context: string } = await resp.json()
+	try {
+		const params = new URLSearchParams();
+		params.append('q', 'LA RESPONSABILIDAD DE UN LÍDER: DESARROLLO DE TEAMMATE');
+		const baseURL = process.env.BASE_URL || 'http://localhost:3000'
+		const url = `${baseURL}/api/books/${settings.bookId}/search?${params.toString()}`
+		const resp = await fetch(url)
 
-
-	return context
+		const { context }: { context: string } = await resp.json()
+		return context
+	} catch (error) {
+		console.log(error)
+		return 'Error loading pdf...'
+	}
 }
 
 export function generateGetContextTool(settings: typeof getContextSettings) {
