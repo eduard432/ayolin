@@ -28,11 +28,6 @@ export async function GET(
 		const results: BookChunkDb[] = await bookChunksCollection
 			.aggregate<BookChunkDb>([
 				{
-					$match: {
-						bookId: bookObjectId,
-					},
-				},
-				{
 					$vectorSearch: {
 						index: 'embedding_index',
 						path: 'embedding',
@@ -44,10 +39,26 @@ export async function GET(
 			])
 			.toArray()
 
-		return {
-			results,
+		let context = ''
+
+		for (let i = 0; i < results.length; i++) {
+			const result = results[i]
+
+			context += `Page:${result.page} \n ${result.content} \n\n\n`
 		}
+
+		return Response.json({
+			context,
+		})
 	} catch (error) {
 		console.log(error)
+		return Response.json(
+			{
+				msg: 'error',
+			},
+			{
+				status: 500,
+			}
+		)
 	}
 }
