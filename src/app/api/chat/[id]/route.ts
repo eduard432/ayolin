@@ -91,7 +91,8 @@ export async function POST(
 			const result = streamText({
 				model: openai(model),
 				system: `${name} - ${initialPrompt}`,
-				messages: messages,
+				// Only use last 8 messages:
+				messages: messages.slice(-8),
 				onFinish: async ({ text, response, usage }) => {
 					console.log({ text })
 					await chatCollection.updateOne(
