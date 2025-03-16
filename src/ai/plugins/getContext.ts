@@ -8,7 +8,7 @@ export const getContextSettings = {
 const getContext = async (query: string, settings: typeof getContextSettings) => {
 	try {
 		const params = new URLSearchParams();
-		params.append('q', 'LA RESPONSABILIDAD DE UN LÍDER: DESARROLLO DE TEAMMATE');
+		params.append('q', query);
 		const baseURL = process.env.BASE_URL || 'http://localhost:3000'
 		const url = `${baseURL}/api/books/${settings.bookId}/search?${params.toString()}`
 		const resp = await fetch(url)
