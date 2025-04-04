@@ -14,6 +14,7 @@ export interface BookChunk {
     embedding: Embedding
     page: number
     chunk: number
+    sBookId: string
 }
 
 export interface BookRecord extends Book {

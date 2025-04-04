@@ -15,8 +15,6 @@ export async function GET(
 
 		if (!q) throw Error('Missing query...')
 
-		const bookObjectId = new ObjectId(id)
-
 		const db = await getDatabase()
 		const bookChunksCollection = db.collection<BookDb>('book_chunks')
 
@@ -34,6 +32,9 @@ export async function GET(
 						queryVector: embedding,
 						numCandidates: 100,
 						limit: 5,
+						filter: {
+							sBookId: id
+						}
 					},
 				},
 			])

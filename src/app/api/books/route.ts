@@ -86,6 +86,7 @@ const processBook = async (
 			embedding,
 			bookId,
 			chunk: i,
+			sBookId: bookId.toString()
 		}))
 
 		const db = await getDatabase()
