@@ -14,33 +14,6 @@ import { auth } from '@/auth'
 import { getChatbots } from '@/app/services/server/chatbotService'
 import { redirect } from 'next/navigation'
 
-const chatbots = [
-	{
-		id: '1',
-		name: 'Customer Support Bot',
-		description: 'Handles customer inquiries and support tickets',
-		createdAt: '2023-04-01',
-		status: 'active',
-		model: 'GPT-4',
-	},
-	{
-		id: '2',
-		name: 'Sales Assistant',
-		description: 'Helps with product recommendations and sales inquiries',
-		createdAt: '2023-04-15',
-		status: 'active',
-		model: 'GPT-3.5',
-	},
-	{
-		id: '3',
-		name: 'Onboarding Guide',
-		description: 'Assists new users with platform onboarding',
-		createdAt: '2023-05-01',
-		status: 'inactive',
-		model: 'GPT-3.5',
-	},
-]
-
 export default async function Page() {
 	const session = await auth()
 
