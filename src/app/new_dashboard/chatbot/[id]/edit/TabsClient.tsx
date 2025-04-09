@@ -4,14 +4,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import React, { useState } from 'react'
 import { Activity } from './Activity'
 import { Settings } from './Settings'
-import { Tools } from './Tools'
+import { Tools } from './_Tools/Tools'
 import { Chats } from './Chats'
 import { ChatBotRecord } from '@/types/ChatBot'
 
 const TabsClient = ({chatBot: defaultChatBot}: {chatBot: ChatBotRecord}) => {
 
 
-    const [chatBot, setChatbot] = useState(defaultChatBot)
+    const [chatBot, setChatBot] = useState(defaultChatBot)
 
 	return (
 		<Tabs defaultValue="activity" className="mt-4">
@@ -26,10 +26,10 @@ const TabsClient = ({chatBot: defaultChatBot}: {chatBot: ChatBotRecord}) => {
 				<Activity />
 			</TabsContent>
 			<TabsContent value="settings">
-				<Settings chatBot={chatBot} setChatBot={setChatbot} />
+				<Settings chatBot={chatBot} setChatBot={setChatBot} />
 			</TabsContent>
 			<TabsContent value="tools">
-				<Tools chatBot={chatBot} />
+				<Tools setChatBot={setChatBot} chatBot={chatBot} />
 			</TabsContent>
 			<TabsContent value="chats">
 				<Chats chatBot={chatBot} />
