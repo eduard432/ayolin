@@ -1,3 +1,4 @@
+import React from 'react'
 import {
 	Card,
 	CardContent,
@@ -5,9 +6,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import React from 'react'
 
-export const Activity = () => {
+const AcitivityPage = () => {
 	return (
 		<div className="max-w-7xl grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
 			<Card>
@@ -109,3 +109,5 @@ export const Activity = () => {
 		</div>
 	)
 }
+
+export default AcitivityPage

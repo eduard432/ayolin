@@ -24,51 +24,11 @@ import { ChatBotRecord } from '@/types/ChatBot'
 import { MoreVertical, Search } from 'lucide-react'
 import { ChatRecord } from '@/types/Chat'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useChatBot } from '../ChatBotContext'
 
-const mockChats = [
-	{
-		id: '1',
-		name: 'Alice Johnson',
-		avatar: '/placeholder.svg?height=32&width=32',
-		lastMessage: "Sure, let's meet tomorrow at 10 AM",
-		status: 'active',
-		lastActive: '2 mins ago',
-	},
-	{
-		id: '2',
-		name: 'Bob Smith',
-		avatar: '/placeholder.svg?height=32&width=32',
-		lastMessage: 'Thanks for your help!',
-		status: 'active',
-		lastActive: '5 mins ago',
-	},
-	{
-		id: '3',
-		name: 'Carol Williams',
-		avatar: '/placeholder.svg?height=32&width=32',
-		lastMessage: 'The project is now complete',
-		status: 'archived',
-		lastActive: '2 hours ago',
-	},
-	{
-		id: '4',
-		name: 'David Brown',
-		avatar: '/placeholder.svg?height=32&width=32',
-		lastMessage: "I'll review the documents",
-		status: 'active',
-		lastActive: '1 day ago',
-	},
-	{
-		id: '5',
-		name: 'Eve Davis',
-		avatar: '/placeholder.svg?height=32&width=32',
-		lastMessage: 'Looking forward to our meeting',
-		status: 'archived',
-		lastActive: '1 week ago',
-	},
-]
+export default function ChatPage() {
+	const { chatBot } = useChatBot()
 
-export const Chats = ({ chatBot }: { chatBot: ChatBotRecord }) => {
 	const [chats, setChats] = useState<ChatRecord[]>()
 
 	const getChats = async (id: string) => {

@@ -16,6 +16,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ToolDialog from './ToolDialog'
 import { set } from 'zod'
+import { useChatBot } from '../ChatBotContext'
 
 type ToolCardProps = {
 	tool: string
@@ -83,7 +84,8 @@ type ToolProps = {
 	setChatBot: React.Dispatch<React.SetStateAction<ChatBotRecord>>
 }
 
-export const Tools = ({ chatBot, setChatBot }: ToolProps) => {
+export default function ToolsPage() {
+	const { chatBot, setChatBot } = useChatBot()
 	const [activeToolIds, setActiveToolIds] = useState(new Set<string>())
 	const [currentTool, setCurrentTool] = useState('')
 	const [isUpdating, setIsUpdating] = useState(false)
@@ -187,7 +189,8 @@ export const Tools = ({ chatBot, setChatBot }: ToolProps) => {
 					isUpdating={isUpdating}
 					updateTool={handleEditPlugin}
 					initialSettings={
-						chatBot.tools.find((tool) => tool.id === currentTool)?.settings}
+						chatBot.tools.find((tool) => tool.id === currentTool)?.settings
+					}
 				/>
 				{[
 					...activeToolIds,

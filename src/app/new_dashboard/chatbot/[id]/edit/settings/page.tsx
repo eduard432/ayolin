@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,18 +15,16 @@ import { ChatBotRecord } from '@/types/ChatBot'
 import MDEditor from '@uiw/react-md-editor'
 import React, { Dispatch, SetStateAction } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useChatBot } from '../ChatBotContext'
 
 type InputData = {
 	name: string
 	initialPrompt: string
 }
 
-type SettingsComponentParams = {
-	chatBot: ChatBotRecord
-	setChatBot: Dispatch<SetStateAction<ChatBotRecord>>
-}
+export default function SettingsPage() {
+	const { chatBot, setChatBot } = useChatBot()
 
-export const Settings = ({ chatBot, setChatBot }: SettingsComponentParams) => {
 	const {
 		getValues,
 		setValue,
@@ -80,7 +80,7 @@ export const Settings = ({ chatBot, setChatBot }: SettingsComponentParams) => {
 					name="name"
 					type="text"
 				/>
-				 <p className="text-sm text-red-700 min-h-5">{errors.name?.message}</p>
+				<p className="text-sm text-red-700 min-h-5">{errors.name?.message}</p>
 			</div>
 			<div className="grid gap-2">
 				<Label htmlFor="model">Model:</Label>
@@ -105,7 +105,7 @@ export const Settings = ({ chatBot, setChatBot }: SettingsComponentParams) => {
 							value: true,
 						},
 					})}
-					rows={10	}
+					rows={10}
 					name="initialPrompt"
 				/>
 				<p className="text-sm text-red-700 min-h-5">{errors.initialPrompt?.message}</p>
@@ -114,7 +114,9 @@ export const Settings = ({ chatBot, setChatBot }: SettingsComponentParams) => {
 				<Button onClick={() => reset()} disabled={hasChanges} variant="secondary">
 					Descartar
 				</Button>
-				<Button type="submit" disabled={hasChanges}>Guardar</Button>
+				<Button type="submit" disabled={hasChanges}>
+					Guardar
+				</Button>
 			</div>
 		</form>
 	)
