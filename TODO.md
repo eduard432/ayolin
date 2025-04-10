@@ -1,0 +1,5 @@
+- Interfaz para crear chatbot
+- Gráficas de estadísticas (backend y frontend)
+- Agregar pestaña de contenido
+    - Hace falta crear un segun servidor para manejar los trabajos asincronos
+    - Crear api para chats de ejemplo
