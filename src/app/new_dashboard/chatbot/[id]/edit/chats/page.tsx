@@ -66,8 +66,8 @@ export default function ChatPage() {
 					</TableHeader>
 					<TableBody>
 						{chats ? (
-							chats.map((chat) => (
-								<TableRow className="py-4">
+							chats.map((chat, i) => (
+								<TableRow key={i} className="py-4">
 									<TableCell className="flex gap-4">
 										<Avatar className="bg-zinc-200" />
 										<div>
@@ -105,8 +105,8 @@ export default function ChatPage() {
 							))
 						) : (
 							<>
-								{[...Array(5)].map(() => (
-									<TableRow className="animate-pulse bg-zinc-100 py-4">
+								{[...Array(5)].map((n) => (
+									<TableRow key={n} className="animate-pulse bg-zinc-100 py-4">
 										<TableCell className="flex gap-4">
 											<Avatar className="bg-zinc-200" />
 											<div className="bg-zinc-200 text-zinc-200 px-2 rounded-md">

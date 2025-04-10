@@ -107,7 +107,7 @@ export default function Home() {
               action={async () => {
                 "use server";
                 await signIn("github", {
-                  redirectTo: "/dashboard",
+                  redirectTo: "/new_dashboard/chatbot",
                 });
               }}
             >
