@@ -24,7 +24,7 @@ import { ChatBotRecord } from '@/types/ChatBot'
 import { MoreVertical, Search } from 'lucide-react'
 import { ChatRecord } from '@/types/Chat'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useChatBot } from '../ChatBotContext'
+import { useChatBot } from '../../ChatBotContext'
 
 export default function ChatPage() {
 	const { chatBot } = useChatBot()

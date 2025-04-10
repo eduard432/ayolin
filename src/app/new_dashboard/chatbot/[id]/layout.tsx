@@ -23,7 +23,7 @@ export default async function EditChatBotLayout({
 				<section className="p-4">
 					<LayoutTitle />
 					<NavTabs className="mt-4">
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/activity`}>
+						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/activity`}>
 							Activity
 						</NavTabTrigger>
 						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/settings`}>

@@ -16,7 +16,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import ToolDialog from './ToolDialog'
 import { set } from 'zod'
-import { useChatBot } from '../ChatBotContext'
+import { useChatBot } from '../../ChatBotContext'
 
 type ToolCardProps = {
 	tool: string

@@ -15,7 +15,7 @@ import { ChatBotRecord } from '@/types/ChatBot'
 import MDEditor from '@uiw/react-md-editor'
 import React, { Dispatch, SetStateAction } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useChatBot } from '../ChatBotContext'
+import { useChatBot } from '../../ChatBotContext'
 
 type InputData = {
 	name: string
