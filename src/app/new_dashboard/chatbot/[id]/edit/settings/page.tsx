@@ -82,7 +82,7 @@ export default function SettingsPage() {
 				/>
 				<p className="text-sm text-red-700 min-h-5">{errors.name?.message}</p>
 			</div>
-			<div className="grid gap-2">
+			<div className="grid gap-2 mb-5">
 				<Label htmlFor="model">Model:</Label>
 				<Select disabled defaultValue="gpt-3.5-turbo">
 					<SelectTrigger className="w-[180px]">
