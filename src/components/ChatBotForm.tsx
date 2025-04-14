@@ -14,20 +14,28 @@ import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { ChatBotRecord } from '@/types/ChatBot'
 import MDEditor from '@uiw/react-md-editor'
-import React, { Dispatch, SetStateAction } from 'react'
+import { useRouter } from 'next/navigation'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-type InputData = {
+export type ChatBotInputData = {
 	name: string
 	initialPrompt: string
 }
 
 type ChatBotFormProps = {
-	chatBot: ChatBotRecord
-	setChatBot: Dispatch<SetStateAction<ChatBotRecord>>
+	chatBot?: ChatBotRecord
+	handleSubmit: SubmitHandler<ChatBotInputData>
 } & Omit<React.ComponentProps<'form'>, 'children'>
 
-const ChatBotForm = ({ chatBot, setChatBot, className, ...props }: ChatBotFormProps) => {
+const ChatBotForm = ({
+	chatBot,
+	className,
+	handleSubmit: handleSubmitForm,
+	...props
+}: ChatBotFormProps) => {
+	const router = useRouter()
+
 	const {
 		getValues,
 		setValue,
@@ -36,7 +44,7 @@ const ChatBotForm = ({ chatBot, setChatBot, className, ...props }: ChatBotFormPr
 		reset,
 		watch,
 		formState: { errors },
-	} = useForm<InputData>({
+	} = useForm<ChatBotInputData>({
 		defaultValues: {
 			initialPrompt: '',
 			name: '',
@@ -50,29 +58,10 @@ const ChatBotForm = ({ chatBot, setChatBot, className, ...props }: ChatBotFormPr
 
 	const currentValues = watch()
 
-	const hasChanges =
-		JSON.stringify({ name: chatBot.name, initialPrompt: chatBot?.initialPrompt }) ==
-		JSON.stringify(currentValues)
-
-	const onSubmit: SubmitHandler<InputData> = async (inputData) => {
-		const result = await fetch(`/api/chatbot/${chatBot._id}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(inputData),
-		})
-		if (result.ok && chatBot) {
-			const { initialPrompt, name } = inputData
-			const newData = { ...chatBot, initialPrompt, name }
-			setChatBot(newData)
-		}
-	}
-
 	return (
 		<form
 			{...props}
-			onSubmit={handleSubmit(onSubmit)}
+			onSubmit={handleSubmit(handleSubmitForm)}
 			className={cn('max-w-2xl grid gap-4', className)}>
 			<div className="grid gap-2">
 				<Label htmlFor="name">Name:</Label>
@@ -116,14 +105,40 @@ const ChatBotForm = ({ chatBot, setChatBot, className, ...props }: ChatBotFormPr
 				/>
 				<p className="text-sm text-red-700 min-h-5">{errors.initialPrompt?.message}</p>
 			</div>
-			<div className="flex gap-2 justify-end">
-				<Button onClick={() => reset()} disabled={hasChanges} variant="secondary">
-					Descartar
-				</Button>
-				<Button type="submit" disabled={hasChanges}>
-					Guardar
-				</Button>
-			</div>
+			{chatBot ? (
+				<div className="flex gap-2 justify-end">
+					<Button
+						onClick={() => reset()}
+						disabled={
+							JSON.stringify({
+								name: chatBot.name,
+								initialPrompt: chatBot?.initialPrompt,
+							}) == JSON.stringify(currentValues)
+						}
+						variant="secondary">
+						Descartar
+					</Button>
+					<Button
+						type="submit"
+						disabled={
+							JSON.stringify({
+								name: chatBot.name,
+								initialPrompt: chatBot?.initialPrompt,
+							}) == JSON.stringify(currentValues)
+						}>
+						Guardar
+					</Button>
+				</div>
+			) : (
+				<div className="flex gap-2 justify-end">
+					<Button
+						onClick={() => router.push('/new_dashboard/chatbot')}
+						variant="secondary">
+						Descartar
+					</Button>
+					<Button type="submit">Guardar</Button>
+				</div>
+			)}
 		</form>
 	)
 }
