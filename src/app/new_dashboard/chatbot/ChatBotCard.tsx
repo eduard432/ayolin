@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import {
 	Card,
 	CardContent,
@@ -23,14 +23,34 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ChatBotRecord } from '@/types/ChatBot'
 
-export const ChatBotCard = ({ chatbot }: { chatbot: ChatBotRecord }) => {
+type ChatBotCardProps = {
+	chatBot: ChatBotRecord
+	setChatBots: Dispatch<SetStateAction<ChatBotRecord[]>>
+}
+
+export const ChatBotCard = ({ chatBot, setChatBots }: ChatBotCardProps) => {
+	const handleDeleteData = async () => {
+		const response = await fetch(`/api/chatbot/${chatBot._id}`, {
+			method: 'DELETE',
+		})
+		if (response.ok) {
+			setChatBots((data) => {
+				const newData = [...data]
+				const index = newData.findIndex((listedChatBot) => listedChatBot._id == chatBot._id)
+				if (index > -1) {
+					newData.splice(index, 1)
+				}
+				return newData
+			})
+		}
+	}
+
 	return (
-		<Link href={`/new_dashboard/chatbot/${chatbot._id}/activity`}>
 			<Card className="flex flex-col">
 				<CardHeader>
 					<div className="flex justify-between items-start">
 						<div className="flex items-center space-x-2">
-							<CardTitle className="text-xl">{chatbot.name}</CardTitle>
+							<CardTitle className="text-xl">{chatBot.name}</CardTitle>
 							{'active' === 'active' ? (
 								<CheckCircle2 className="h-5 w-5 text-green-500" />
 							) : (
@@ -46,17 +66,19 @@ export const ChatBotCard = ({ chatbot }: { chatbot: ChatBotRecord }) => {
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
 								<DropdownMenuItem>
-									<Link href={`/chatbot/${chatbot._id}/edit`}>Edit</Link>
+									<Link href={`/new_dashboard/chatbot/${chatBot._id}/edit/settings`}>Edit</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem>
-									<Link href={`/chatbot/${chatbot._id}/analytics`}>View Analytics</Link>
+									<Link href={`/new_dashboard/chatbot/${chatBot._id}/activity`}>View Analytics</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+								<DropdownMenuItem onClick={handleDeleteData} className="text-red-600 cursor-pointer">
+									Delete
+								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
 					<CardDescription>
-						<p className="overflow-hidden h-4">{chatbot.initialPrompt}</p>
+						<p className="overflow-hidden h-4">{chatBot.initialPrompt}</p>
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex-grow">
@@ -64,17 +86,16 @@ export const ChatBotCard = ({ chatbot }: { chatbot: ChatBotRecord }) => {
 						<div className="flex gap-2">
 							<p className="text-gray-500 flex items-center">
 								<MessageSquare className="h-4" />
-								<span>{chatbot.totalMessages}</span>
+								<span>{chatBot.totalMessages}</span>
 							</p>
 							<p className="text-gray-500 flex items-center">
 								<MessagesSquare className="h-4" />
-								<span>{chatbot.chats.length}</span>
+								<span>{chatBot.chats.length}</span>
 							</p>
 						</div>
-						<p className="text-sm font-semibold">Model: {chatbot.model}</p>
+						<p className="text-sm font-semibold">Model: {chatBot.model}</p>
 					</div>
 				</CardContent>
 			</Card>
-		</Link>
 	)
 }

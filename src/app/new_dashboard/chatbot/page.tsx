@@ -14,6 +14,7 @@ import { auth } from '@/auth'
 import { getChatbots } from '@/app/services/server/chatbotService'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import ChatBots from '../ChatBots'
 
 export default async function Page() {
 	const session = await auth()
@@ -60,16 +61,7 @@ export default async function Page() {
 				</DropdownMenu>
 			</section>
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-					{chatBots.map((chatbot) => (
-						<ChatBotCard key={chatbot._id} chatbot={chatbot} />
-					))}
-
-					<div className=" rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
-					<div className="aspect-video rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
-					<div className="aspect-video rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
-				</div>
-				<div className="min-h-[100vh] flex-1 rounded-xl bg-zinc-100/50 md:min-h-min dark:bg-zinc-800/50" />
+				<ChatBots chatBots={chatBots} />
 			</section>
 		</main>
 	)
