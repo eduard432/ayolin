@@ -8,15 +8,16 @@ export default function SettingsPage() {
 	const { chatBot, setChatBot } = useChatBot()
 
 	const onSubmit: SubmitHandler<ChatBotInputData> = async (inputData) => {
+		const {model, ...restData} = inputData
 		const result = await fetch(`/api/chatbot/${chatBot._id}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(inputData),
+			body: JSON.stringify(restData),
 		})
 		if (result.ok && chatBot) {
-			const { initialPrompt, name } = inputData
+			const { initialPrompt, name } = restData
 			const newData = { ...chatBot, initialPrompt, name }
 			setChatBot(newData)
 		}
