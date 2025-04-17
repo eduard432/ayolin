@@ -31,7 +31,7 @@ export function AddToolDialog({
 	initialSettings?: { [key: string]: string }
 	isUpdating?: boolean
 }) {
-	if (!tool) return null
+	if (!tool) return
 
 	const [settings, setSettings] = useState<{ [key: string]: string }>(
 		Object.keys(aiPlugins[tool].settings).reduce((acc, key) => {
