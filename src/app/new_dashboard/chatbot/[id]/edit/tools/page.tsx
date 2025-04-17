@@ -34,7 +34,7 @@ const ToolCard = ({
 	handleEditFunction,
 }: ToolCardProps) => {
 	return (
-		<Card key={tool} className="flex flex-col">
+		<Card key={tool} className="flex flex-col justify-between">
 			<CardHeader>
 				<div className="flex justify-between items-start">
 					<div className="flex items-center space-x-2">
@@ -63,7 +63,7 @@ const ToolCard = ({
 					)}
 				</div>
 				<CardDescription className="flex flex-col justify-between">
-					<p className="">{aiPlugins[tool].description}</p>
+					<p className="min-h-10">{aiPlugins[tool].description}</p>
 					{!using && (
 						<Button
 							onClick={() => handleAddTool(tool)}
