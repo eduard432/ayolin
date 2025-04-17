@@ -49,7 +49,7 @@ const ToolCard = ({
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
-								<DropdownMenuItem onClick={handleEditFunction}>Edit</DropdownMenuItem>
+								{/* <DropdownMenuItem onClick={handleEditFunction}>Edit</DropdownMenuItem> */}
 								<DropdownMenuItem>
 									<Link href={`/chatbot/${tool}/analytics`}>View Analytics</Link>
 								</DropdownMenuItem>
