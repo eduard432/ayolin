@@ -18,7 +18,6 @@ export default async function EditChatBotLayout({
 
 	return (
 		<ChatBotContextProvider value={chatBot}>
-			<main>
 				<LayoutHeader />
 				<section className="p-4">
 					<LayoutTitle />
@@ -35,13 +34,15 @@ export default async function EditChatBotLayout({
 						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/chats`}>
 							Chats
 						</NavTabTrigger>
+						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/integrations`}>
+							Integrations
+						</NavTabTrigger>
 						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/content`}>
 							Content
 						</NavTabTrigger>
 					</NavTabs>
 					<NavTabContent>{children}</NavTabContent>
 				</section>
-			</main>
 		</ChatBotContextProvider>
 	)
 }
