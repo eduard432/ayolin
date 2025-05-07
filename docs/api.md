@@ -26,4 +26,6 @@
 - /api/messages/[CHAT_ID]:
     - DELETE: Elimina todos los mensajes de un chat
 
+[Excalidraw Diagram:](https://excalidraw.com/#json=5OXdRieICH1KUTZtah8Xm,vmSK6Te4aJ28Q242ZoqUyw)
+
 ![API ROUTES DIAGRAM](./API_ROUTES.png)
