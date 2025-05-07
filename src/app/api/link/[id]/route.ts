@@ -8,7 +8,6 @@ export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> }
 ) {
-	console.log('exec')
 	const { id: chatBotId } = await params
 	const chatBotObjectId = new ObjectId(chatBotId)
 
