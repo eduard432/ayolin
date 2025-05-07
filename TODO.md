@@ -4,3 +4,9 @@
     - Hace falta crear un segun servidor para manejar los trabajos asincronos
     - Crear api para chats de ejemplo
 - Agregar página de chateo
+- Agregar validaciones a todas las rutas api
+- Crear docs:
+    - Documentar api
+    - Documentar páginas
+    - Documentar procesos
+    
