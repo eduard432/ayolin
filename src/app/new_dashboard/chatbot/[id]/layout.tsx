@@ -1,4 +1,4 @@
-import { getChatBot } from '@/app/services/server/chatbotService'
+import { getChatBot } from '@/services/chatbot.service'
 import Header from '@/components/Header'
 import { NavTabContent, NavTabs, NavTabTrigger } from '@/components/nav-tool'
 import { notFound } from 'next/navigation'

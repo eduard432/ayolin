@@ -1,5 +1,5 @@
 import { getAiPlugin } from '@/ai/plugins'
-import { getChatInfo } from '@/app/services/server/chatService'
+import { getChatInfo } from '@/services/chat.service'
 import { handleApiError } from '@/lib/api/handleError'
 import { validateWithSource } from '@/lib/api/validate'
 import { getDatabase } from '@/lib/db'

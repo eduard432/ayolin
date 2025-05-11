@@ -4,7 +4,7 @@ import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { FaRegSquarePlus } from 'react-icons/fa6'
 import ChatBots from './ChatBots'
-import { getChatbots } from '../services/server/chatbotService'
+import { getChatbots } from '@/services/chatbot.service'
 
 const DashBoardPage = async () => {
 	const session = await auth()

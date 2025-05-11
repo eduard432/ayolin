@@ -1,4 +1,4 @@
-import { getChatInfo } from '@/app/services/server/chatService'
+import { getChatInfo } from '@/services/chat.service'
 import Chat from '@/components/client/Chat'
 import { notFound } from 'next/navigation'
 import React from 'react'

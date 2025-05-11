@@ -1,5 +1,5 @@
 import { getAiPlugin } from '@/ai/plugins'
-import { getChatInfo } from '@/app/services/server/chatService'
+import { getChatInfo } from '@/services/chat.service'
 import { getDatabase } from '@/lib/db'
 import { ChatDb } from '@/types/Chat'
 import { ChatBotDb } from '@/types/ChatBot'
