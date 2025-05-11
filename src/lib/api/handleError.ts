@@ -14,10 +14,12 @@ export function handleApiError(error: unknown): Response {
     );
   }
 
+  console.log((error as Error)?.message)
+
   return new Response(
     JSON.stringify({
       error: "Unexpected error",
-      message: (error as Error)?.message || "Unknown server error",
+      message: "Unknown server error",
     }),
     { status: 500 }
   );
