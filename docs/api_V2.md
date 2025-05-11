@@ -19,8 +19,6 @@
 - `/api/v2/content/books (POST: crear job de procesamiento)`
 - `/api/v2/content/books/:bookId/search (GET: búsqueda semántica dentro del libro)`
 
-### Cloudinary
-- `/api/v2/cloudinary/credentials (POST: obtener credenciales)`
-
 ## WIP
 - `/api/v2/content/conversations (WIP)`
+- `/api/v2/cloudinary/credentials (POST: obtener credenciales)`
