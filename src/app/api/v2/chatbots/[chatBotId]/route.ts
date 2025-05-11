@@ -5,85 +5,93 @@ import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { validateWithSource } from '@/lib/api/validate'
+import { handleApiError } from '@/lib/api/handleError'
 
 // PUT: Update a chatbot:
 // /api/chatbots/:chatbotId
 const paramsSchema = z.object({
-    chatBotId: z.string(),
+	chatBotId: z.string(),
 })
 
-const updateBodySchema = z.object({
-    name: z.string(),
-    model: z.string(),
-    initialPrompt: z.string(),
-}).strict()
+const updateBodySchema = z
+	.object({
+		name: z.string(),
+		model: z.string(),
+		initialPrompt: z.string(),
+	})
+	.strict()
 
 export async function PUT(
-    request: NextRequest,
-    { params }: { params: Promise<{chatBotId: string}> }
+	request: NextRequest,
+	{ params }: { params: Promise<{ chatBotId: string }> }
 ) {
-    const { chatBotId } = validateWithSource(paramsSchema, params, "params")
-    const objectId = new ObjectId(chatBotId)
+	try {
+		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
+		const objectId = new ObjectId(chatBotId)
 
-    const db = await getDatabase()
-    const chatBotCollection = db.collection<ChatBotDb>('chatbot')
+		const db = await getDatabase()
+		const chatBotCollection = db.collection<ChatBotDb>('chatbot')
 
-    const body = await request.json()
-    const data = validateWithSource(updateBodySchema, body, "body")
+		const body = await request.json()
+		const data = validateWithSource(updateBodySchema, body, 'body')
 
-    const result = await chatBotCollection.updateOne(
-        { _id: objectId },
-        { $set: data }
-    )
+		const result = await chatBotCollection.updateOne({ _id: objectId }, { $set: data })
 
-    const res = NextResponse
+		const res = NextResponse
 
-    if (result.modifiedCount > 0) {
-        return res.json({
-            msg: 'Chatbot updated!!!',
-        })
-    } else {
-        return res.json(
-            {
-                msg: 'Error trying to update chatbot!!',
-            },
-            {
-                status: 500,
-            }
-        )
-    }
+		if (result.modifiedCount > 0) {
+			return res.json({
+				msg: 'Chatbot updated!!!',
+			})
+		} else {
+			return res.json(
+				{
+					msg: 'Error trying to update chatbot!!',
+				},
+				{
+					status: 500,
+				}
+			)
+		}
+	} catch (error) {
+		return handleApiError(error)
+	}
 }
 
 // DELETE: Delete a chatbot:
 // /api/chatbots/:chatbotId
 export async function DELETE(
-    request: NextRequest,
-    { params }: { params: Promise<{chatBotId: string}> }
+	request: NextRequest,
+	{ params }: { params: Promise<{ chatBotId: string }> }
 ) {
-    const { chatBotId } = validateWithSource(paramsSchema, params, "params")
-    const objectId = new ObjectId(chatBotId)
+	try {
+		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
+		const objectId = new ObjectId(chatBotId)
 
-    const db = await getDatabase()
-    const chatBotCollection = db.collection<ChatBotDb>('chatbot')
-    const chatCollection = db.collection<ChatDb>('chat')
+		const db = await getDatabase()
+		const chatBotCollection = db.collection<ChatBotDb>('chatbot')
+		const chatCollection = db.collection<ChatDb>('chat')
 
-    const chatBotResult = await chatBotCollection.deleteOne({ _id: objectId })
-    await chatCollection.deleteMany({ chatBotId: objectId })
+		const chatBotResult = await chatBotCollection.deleteOne({ _id: objectId })
+		await chatCollection.deleteMany({ chatBotId: objectId })
 
-    const res = NextResponse
+		const res = NextResponse
 
-    if (chatBotResult.deletedCount > 0) {
-        return res.json({
-            msg: 'Chatbot removed!!!',
-        })
-    } else {
-        return res.json(
-            {
-                msg: 'Error trying to remove chatbot!!',
-            },
-            {
-                status: 500,
-            }
-        )
-    }
+		if (chatBotResult.deletedCount > 0) {
+			return res.json({
+				msg: 'Chatbot removed!!!',
+			})
+		} else {
+			return res.json(
+				{
+					msg: 'Error trying to remove chatbot!!',
+				},
+				{
+					status: 500,
+				}
+			)
+		}
+	} catch (error) {
+		return handleApiError(error)
+	}
 }
