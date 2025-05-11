@@ -1,20 +1,24 @@
+import { ZodErrorWithSource } from "./validate";
 import { ZodError } from "zod";
 
 export function handleApiError(error: unknown): Response {
   if (error instanceof ZodError) {
+    const source = (error as ZodErrorWithSource).source || "unknown";
+
     return new Response(
       JSON.stringify({
-        error: "Error de validación",
+        error: `Validation error in ${source}`,
         issues: error.flatten(),
       }),
-      { status: 422, headers: { "Content-Type": "application/json" } }
+      { status: 422 }
     );
   }
 
   return new Response(
     JSON.stringify({
-      error: (error as Error)?.message || "Error desconocido",
+      error: "Unexpected error",
+      message: (error as Error)?.message || "Unknown server error",
     }),
-    { status: 500, headers: { "Content-Type": "application/json" } }
+    { status: 500 }
   );
 }
