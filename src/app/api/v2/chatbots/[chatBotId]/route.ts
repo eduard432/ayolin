@@ -1,11 +1,8 @@
-import { getDatabase } from '@/lib/db'
-import { ChatDb } from '@/types/Chat'
-import { ChatBotDb } from '@/types/ChatBot'
-import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { validateWithSource } from '@/lib/api/validate'
 import { handleApiError } from '@/lib/api/handleError'
+import { deleteChatBot, updateChatBot } from '@/services/chatbot.service'
 
 // PUT: Update a chatbot:
 // /api/chatbots/:chatbotId
@@ -27,29 +24,24 @@ export async function PUT(
 ) {
 	try {
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
-		const objectId = new ObjectId(chatBotId)
-
-		const db = await getDatabase()
-		const chatBotCollection = db.collection<ChatBotDb>('chatbot')
-
 		const body = await request.json()
 		const data = validateWithSource(updateBodySchema, body, 'body')
 
-		const result = await chatBotCollection.updateOne({ _id: objectId }, { $set: data })
+		const result = await updateChatBot(chatBotId, data)
 
 		const res = NextResponse
 
-		if (result.modifiedCount > 0) {
+		if (result) {
 			return res.json({
-				msg: 'Chatbot updated!!!',
+				msg: 'Chatbot updated.',
 			})
 		} else {
 			return res.json(
 				{
-					msg: 'Error trying to update chatbot!!',
+					msg: 'Chat bot not found.',
 				},
 				{
-					status: 500,
+					status: 404,
 				}
 			)
 		}
@@ -66,25 +58,18 @@ export async function DELETE(
 ) {
 	try {
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
-		const objectId = new ObjectId(chatBotId)
-
-		const db = await getDatabase()
-		const chatBotCollection = db.collection<ChatBotDb>('chatbot')
-		const chatCollection = db.collection<ChatDb>('chat')
-
-		const chatBotResult = await chatBotCollection.deleteOne({ _id: objectId })
-		await chatCollection.deleteMany({ chatBotId: objectId })
+		const result = await deleteChatBot(chatBotId)
 
 		const res = NextResponse
 
-		if (chatBotResult.deletedCount > 0) {
+		if (result) {
 			return res.json({
-				msg: 'Chatbot removed!!!',
+				msg: 'Chatbot removed.',
 			})
 		} else {
 			return res.json(
 				{
-					msg: 'Error trying to remove chatbot!!',
+					msg: 'Chat bot not found.',
 				},
 				{
 					status: 500,

@@ -1,9 +1,6 @@
 import { handleApiError } from '@/lib/api/handleError'
 import { validateWithSource } from '@/lib/api/validate'
-import { getDatabase } from '@/lib/db'
-import { ChatDb } from '@/types/Chat'
-import { ChatBotDb } from '@/types/ChatBot'
-import { ObjectId } from 'mongodb'
+import { addChat } from '@/services/chat.service'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -19,43 +16,18 @@ export async function GET(
 ) {
 	try {
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
-		const chatBotObjectId = new ObjectId(chatBotId)
-
-		const db = await getDatabase()
-
-		const chatCollection = db.collection<ChatDb>('chat')
-		const chatBotCollection = db.collection<ChatBotDb>('chatbot')
-
-		const chatResult = await chatCollection.insertOne({
-			chatBotId: chatBotObjectId,
-			messages: [],
-		})
+		const result = await addChat(chatBotId)
 
 		const response = NextResponse
-		if (chatResult) {
-			const chatBotResult = await chatBotCollection.updateOne(
-				{ _id: chatBotObjectId },
-				{ $push: { chats: chatResult.insertedId } }
-			)
 
-			if (chatBotResult.modifiedCount > 0) {
-				const url = request.nextUrl.clone()
-				url.pathname = `/chat/${chatResult.insertedId.toString()}`
-				return response.redirect(url)
-			} else {
-				return response.json(
-					{
-						message: 'Error adding Chat!!',
-					},
-					{
-						status: 500,
-					}
-				)
-			}
+		if (result) {
+			const url = request.nextUrl.clone()
+			url.pathname = `/chat/${result}`
+			return response.redirect(url)
 		} else {
 			return response.json(
 				{
-					message: 'Unavilable to add chat',
+					message: 'Chatbot not found.',
 				},
 				{
 					status: 500,

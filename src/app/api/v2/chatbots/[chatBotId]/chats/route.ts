@@ -1,8 +1,6 @@
 import { handleApiError } from '@/lib/api/handleError'
 import { validateWithSource } from '@/lib/api/validate'
-import { getDatabase } from '@/lib/db'
-import { ChatDb } from '@/types/Chat'
-import { ObjectId } from 'mongodb'
+import { getChats } from '@/services/chat.service'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -16,20 +14,7 @@ export async function GET(
 ) {
 	try {
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
-		const chatBotObjectId = new ObjectId(chatBotId)
-
-		const db = await getDatabase()
-		const chatCollection = db.collection<ChatDb>('chat')
-
-		const chatResult = chatCollection.aggregate([
-			{
-				$match: {
-					chatBotId: chatBotObjectId,
-				},
-			},
-		])
-
-		const chats = await chatResult.toArray()
+		const chats = await getChats(chatBotId)
 		return NextResponse.json({
 			chats,
 		})

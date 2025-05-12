@@ -1,8 +1,6 @@
 import { handleApiError } from '@/lib/api/handleError'
 import { validateWithSource } from '@/lib/api/validate'
-import { getDatabase } from '@/lib/db'
-import { ChatDb } from '@/types/Chat'
-import { ObjectId } from 'mongodb'
+import { deleteAllMessages } from '@/services/chat.service'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -10,6 +8,8 @@ const paramsSchema = z.object({
 	chatId: z.string(),
 })
 
+// DELETE: Delete all messages from a chat
+// /api/chats/:chatId/messages
 export async function DELETE(
 	request: NextRequest,
 	{ params: paramsPromise }: { params: Promise<{ id: string }> }
@@ -17,21 +17,11 @@ export async function DELETE(
 	try {
 		const params = await paramsPromise
 		const { chatId } = validateWithSource(paramsSchema, params, 'params')
-		const chatObjectId = new ObjectId(chatId)
-
-		const db = await getDatabase()
-
-		const chatCollection = db.collection<ChatDb>('chat')
-
-		const chatResult = await chatCollection.updateOne(
-			{ _id: chatObjectId },
-			{
-				$set: { messages: [] },
-			}
-		)
+	
+		const result = await deleteAllMessages(chatId)
 
 		const response = NextResponse
-		if (chatResult.modifiedCount > 0) {
+		if (result) {
 			return response.json({
 				message: 'Messages deleted',
 			})

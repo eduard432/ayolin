@@ -1,61 +1,25 @@
 import { handleApiError } from '@/lib/api/handleError'
 import { validateWithSource } from '@/lib/api/validate'
-import { getDatabase } from '@/lib/db'
-import { ChatDb } from '@/types/Chat'
-import { ChatBotDb } from '@/types/ChatBot'
-import { ObjectId } from 'mongodb'
+import { createChatBot, createChatbotBodySchema } from '@/services/chatbot.service'
 import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
 
 // POST: Create a new chatbot:
 // /api/chatbots
-const bodyDataSchema = z
-	.object({
-		model: z.string(),
-		name: z.string(),
-		initialPrompt: z.string(),
-		userId: z.string(),
-	})
-	.strict()
 
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json()
-		const data = validateWithSource(bodyDataSchema, body, 'body')
+		const data = validateWithSource(createChatbotBodySchema, body, 'body')
 
-		const chatId = new ObjectId()
-		const userObjectId = new ObjectId(data.userId)
-
-		const db = await getDatabase()
-		const chatBotCollection = db.collection<ChatBotDb>('chatbot')
-		const chatCollection = db.collection<ChatDb>('chat')
-
-		const chatBot: ChatBotDb = {
-			...data,
-			defaultChatId: chatId,
-			chats: [chatId],
-			tools: [],
-			usedTokens: {
-				input: 0,
-				output: 0,
-			},
-			totalMessages: 0,
-			userId: userObjectId,
-			integrations: [],
-		}
-		const chatBotResult = await chatBotCollection.insertOne(chatBot)
-		await chatCollection.insertOne({
-			_id: chatId,
-			chatBotId: chatBotResult.insertedId,
-			messages: [],
-		})
+		const result = await createChatBot(data)
 
 		const response = NextResponse
 
-		if (chatBotResult) {
+		if (result) {
 			return response.json(
 				{
 					msg: 'ChatBot created',
+					chatbot: result,
 				},
 				{
 					status: 201,
