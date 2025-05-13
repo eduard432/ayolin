@@ -26,6 +26,31 @@
 - /api/messages/[CHAT_ID]:
     - DELETE: Elimina todos los mensajes de un chat
 
+```bash
+api
+│   ├── auth
+│   │   └── [...nextauth]
+│   ├── chat
+│   │   └── [id]
+│   ├── chatbot
+│   │   └── [id]
+│   │       └── chats
+│   ├── cloudinary
+│   ├── content
+│   │   ├── books
+│   │   │   └── [id]
+│   │   │       └── search
+│   │   └── conversation
+│   ├── integrations
+│   │   └── wa
+│   │       └── webhook
+│   ├── link
+│   │   └── [id]
+│   ├── messages
+│   │   └── [id]
+│   ├── plugin
+```
+
 [Excalidraw Diagram:](https://excalidraw.com/#json=5OXdRieICH1KUTZtah8Xm,vmSK6Te4aJ28Q242ZoqUyw)
 
 ![API ROUTES DIAGRAM](./API_ROUTES.png)

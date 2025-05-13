@@ -22,3 +22,19 @@
 ## WIP
 - `/api/v2/content/conversations (WIP)`
 - `/api/v2/cloudinary/credentials (POST: obtener credenciales)`
+
+
+```bash
+│   └── v2
+│       ├── chatbots
+│       │   └── [chatBotId]
+│       │       ├── chats
+│       │       └── link
+│       ├── chats
+│       │   └── [chatId]
+│       │       └── messages
+│       └── content
+│           └── books
+│               └── [bookId]
+│                   └── search
+```
