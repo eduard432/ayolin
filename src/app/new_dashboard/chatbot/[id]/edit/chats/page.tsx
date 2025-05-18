@@ -36,7 +36,6 @@ export default function ChatPage() {
 
 		if (response.ok) {
 			const { chats }: { chats: ChatRecord[] } = await response.json()
-			console.log({ chats })
 			setChats(chats)
 		}
 	}
