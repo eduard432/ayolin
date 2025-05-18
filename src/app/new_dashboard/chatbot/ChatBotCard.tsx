@@ -65,13 +65,13 @@ export const ChatBotCard = ({ chatBot, setChatBots }: ChatBotCardProps) => {
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
-								<DropdownMenuItem>
+								<DropdownMenuItem asChild className="cursor-pointer" >
 									<Link href={`/new_dashboard/chatbot/${chatBot._id}/edit/settings`}>Edit</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem>
+								<DropdownMenuItem asChild className="cursor-pointer" >
 									<Link href={`/new_dashboard/chatbot/${chatBot._id}/activity`}>View Analytics</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem onClick={handleDeleteData} className="text-red-600 cursor-pointer">
+								<DropdownMenuItem asChild onClick={handleDeleteData} className="text-red-600 cursor-pointer">
 									Delete
 								</DropdownMenuItem>
 							</DropdownMenuContent>
