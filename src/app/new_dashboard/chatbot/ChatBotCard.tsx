@@ -71,7 +71,10 @@ export const ChatBotCard = ({ chatBot, setChatBots }: ChatBotCardProps) => {
 								<DropdownMenuItem asChild className="cursor-pointer" >
 									<Link href={`/new_dashboard/chatbot/${chatBot._id}/activity`}>View Analytics</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem asChild onClick={handleDeleteData} className="text-red-600 cursor-pointer">
+								<DropdownMenuItem asChild className="cursor-pointer" >
+									<Link href={`/new_dashboard/chat/${chatBot.defaultChatId}`}>Admin Chat</Link>
+								</DropdownMenuItem>
+								<DropdownMenuItem onClick={handleDeleteData} className="text-red-600 cursor-pointer">
 									Delete
 								</DropdownMenuItem>
 							</DropdownMenuContent>
