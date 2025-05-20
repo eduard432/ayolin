@@ -8,6 +8,7 @@ import ForwardButton from '@/components/client/ForwardButton'
 import Chat from '@/components/client/Chat'
 import { WithId } from 'mongodb'
 import { ChatBot } from '@/types/ChatBot'
+import Header from '@/components/Header'
 
 export default function DashBoardChatPage() {
 	const [chatInfo, setChatInfo] = useState<{
@@ -45,14 +46,18 @@ export default function DashBoardChatPage() {
 
 	return (
 		<main className="p-4 px-12 h-screen bg-neutral-50 text-neutral-950">
-			<ForwardButton />
 			{chatInfo && (
-				<>
-					<h2 className="text-2xl font-semibold">
-						Chateando con: {chatInfo.chatBot.name}
-					</h2>
-					<p className="text-xl text-semibold">Usa el model: {chatInfo.chatBot.model}</p>
-					<section className="w-2/3 mx-auto my-4 flex justify-end">
+				<main>
+					<Header
+						title={{
+							content: `Chat Bots`,
+							url: `/new_dashboard/chatbot`,
+						}}
+						subTitle="Admin Chat"
+					/>
+					<h3 className="text-4xl p-4 font-semibold">Chateando con: {chatInfo.chatBot.name}</h3>
+					<p className="text-xl p-4 text-semibold">Usa el model: {chatInfo.chatBot.model}</p>
+					<section className="w-full my-4">
 						<div className="flex gap-1">
 							<button
 								onClick={() =>
@@ -69,7 +74,7 @@ export default function DashBoardChatPage() {
 						</div>
 					</section>
 					<Chat id={id} messages={chatInfo.messages} clean={clean} setClean={setClean} />
-				</>
+				</main>
 			)}
 		</main>
 	)

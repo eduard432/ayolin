@@ -53,8 +53,8 @@ const Chat = ({ messages: initialMessages, id, clean, setClean }: ChatProps) => 
 	
 
 	return (
-		<section className="rounded border h-full md:h-5/6 border-gray-300 p-4 w-full md:w-2/3 mx-auto flex flex-col justify-between gap-4 my-2">
-			<ul className="overflow-y-auto  px-4">
+		<section className="rounded border h-full border-gray-300 p-4 w-full flex flex-col justify-between gap-4 my-2">
+			<ul className="overflow-y-auto h-96 px-4">
 				{messages.map((message, i) => {
 					if (
 						message.role === 'user' ||
