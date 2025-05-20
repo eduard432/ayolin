@@ -64,7 +64,7 @@ export function NavMain({
 													<SidebarMenuSubButton
 														className={cn(pathname.split('/').includes(item.url) && 'bg-zinc-200')}
 														asChild>
-														<Link href={`/new_dashboard/${subItem.url}`}>
+														<Link href={`/dashboard/${subItem.url}`}>
 															{subItem.title}
 														</Link>
 													</SidebarMenuSubButton>
@@ -78,7 +78,7 @@ export function NavMain({
 									asChild
 									className={cn(pathname.split('/').includes(item.url) && 'bg-zinc-200')}
 									tooltip={item.title}>
-									<Link href={`/new_dashboard/${item.url}`}>{item.icon && <item.icon />}{item.title}</Link>
+									<Link href={`/dashboard/${item.url}`}>{item.icon && <item.icon />}{item.title}</Link>
 								</SidebarMenuButton>
 							)}
 						</SidebarMenuItem>

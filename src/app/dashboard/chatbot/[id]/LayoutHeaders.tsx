@@ -10,7 +10,7 @@ export const LayoutHeader = () => {
 		<Header
 			title={{
 				content: 'Chat Bots',
-				url: '/new_dashboard/chatbot',
+				url: '/dashboard/chatbot',
 			}}
 			subTitle={chatBot.name}
 		/>

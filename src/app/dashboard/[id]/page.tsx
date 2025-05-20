@@ -31,7 +31,7 @@ export default function DashBoardChatPage() {
 			const data = await response.json()
 			setChatInfo(data)
 		} else {
-			router.push('/new_dashboard/chatbot')
+			router.push('/dashboard/chatbot')
 		}
 	}
 
@@ -51,7 +51,7 @@ export default function DashBoardChatPage() {
 					<Header
 						title={{
 							content: `Chat Bots`,
-							url: `/new_dashboard/chatbot`,
+							url: `/dashboard/chatbot`,
 						}}
 						subTitle="Admin Chat"
 					/>

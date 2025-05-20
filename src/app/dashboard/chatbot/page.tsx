@@ -35,7 +35,7 @@ export default async function Page() {
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
 						<DropdownMenuItem asChild >
-							<Link href="/new_dashboard/chatbot/new">
+							<Link href="/dashboard/chatbot/new">
 								<Bot />
 								Custom
 							</Link>

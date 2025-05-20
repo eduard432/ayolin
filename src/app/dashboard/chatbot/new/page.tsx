@@ -13,7 +13,7 @@ const NewChatBotPage = async () => {
 			<Header
 				title={{
 					content: 'Chat Bots',
-					url: '/new_dashboard/chatbot',
+					url: '/dashboard/chatbot',
 				}}
 				subTitle="New chatbot"
 			/>

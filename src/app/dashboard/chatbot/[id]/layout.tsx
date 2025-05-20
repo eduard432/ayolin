@@ -22,22 +22,22 @@ export default async function EditChatBotLayout({
 				<section className="p-4">
 					<LayoutTitle />
 					<NavTabs className="mt-4">
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/activity`}>
+						<NavTabTrigger href={`/dashboard/chatbot/${id}/activity`}>
 							Activity
 						</NavTabTrigger>
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/settings`}>
+						<NavTabTrigger href={`/dashboard/chatbot/${id}/edit/settings`}>
 							Settings
 						</NavTabTrigger>
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/tools`}>
+						<NavTabTrigger href={`/dashboard/chatbot/${id}/edit/tools`}>
 							Tools
 						</NavTabTrigger>
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/chats`}>
+						<NavTabTrigger href={`/dashboard/chatbot/${id}/edit/chats`}>
 							Chats
 						</NavTabTrigger>
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/integrations`}>
+						<NavTabTrigger href={`/dashboard/chatbot/${id}/edit/integrations`}>
 							Integrations
 						</NavTabTrigger>
-						<NavTabTrigger href={`/new_dashboard/chatbot/${id}/edit/content`}>
+						<NavTabTrigger href={`/dashboard/chatbot/${id}/edit/content`}>
 							Content
 						</NavTabTrigger>
 					</NavTabs>

@@ -141,7 +141,7 @@ const ChatBotForm = ({
 			) : (
 				<div className="flex gap-2 justify-end">
 					<Button
-						onClick={() => router.push(redirect || '/new_dashboard/chatbot')}
+						onClick={() => router.push(redirect || '/dashboard/chatbot')}
 						variant="secondary">
 						Descartar
 					</Button>

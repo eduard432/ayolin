@@ -1,58 +1,23 @@
-'use client'
+"use client"
 
 import { ChatBotRecord } from '@/types/ChatBot'
-import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
-import { FaPencil, FaRegMessage, FaRegTrashCan } from 'react-icons/fa6'
+import {useState} from 'react'
+import { ChatBotCard } from './chatbot/ChatBotCard'
 
-const ChatBots = ({ chatBots: initialChatBots }: { chatBots: ChatBotRecord[] }) => {
-	const [chatBots, setChatBots] = useState(initialChatBots)
-	const router = useRouter()
+const ChatBots = ({chatBots: defaultChatBots}: {chatBots: ChatBotRecord[]}) => {
 
-	const handleDeleteData = async (id: string) => {
-		const response = await fetch(`/api/chatbot/${id}`, {
-			method: 'DELETE',
-		})
-		if (response.ok) {
-			setChatBots((data) => {
-				const newData = [...data]
-				const index = newData.findIndex((chatbot) => chatbot._id == id)
-				if (index > -1) {
-					newData.splice(index, 1)
-				}
-				return newData
-			})
-		}
-	}
+    const [chatBots, setChatBots] = useState<ChatBotRecord[]>(defaultChatBots)
 
 	return (
-		<section className="grid grid-cols-4 gap-4">
-			{chatBots.map(({ model, name, _id, defaultChatId }, i) => (
-				<div
-					key={i}
-					className="p-2 px-4 border rounded border-gray-300 min-w-48 group min-h-28">
-					<h2 className="text-xl font-semibold">{name}</h2>
-					<p>Model: {model}</p>
-					<div className="mt-2 hidden space-x-2 group-hover:flex">
-						<button
-							className="text-sm bg-black text-white rounded p-2"
-							onClick={() => router.push(`/dashboard/chatbot/edit/${_id}`)}>
-							<FaPencil />
-						</button>
-						<button
-							className="text-sm bg-black text-white rounded p-2"
-							onClick={() => handleDeleteData(_id)}>
-							<FaRegTrashCan />
-						</button>
-						<button
-							className="text-sm bg-black text-white rounded p-2"
-							onClick={() => router.push(`/dashboard/chat/${defaultChatId}`)}>
-							<FaRegMessage />
-						</button>
-					</div>
-				</div>
+		<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+			{chatBots.map((chatbot) => (
+				<ChatBotCard setChatBots={setChatBots} key={chatbot._id} chatBot={chatbot} />
 			))}
-		</section>
+
+			<div className="rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
+			<div className="aspect-video rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
+			<div className="aspect-video rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
+		</div>
 	)
 }
 

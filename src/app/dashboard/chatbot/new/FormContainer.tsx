@@ -20,7 +20,7 @@ const FormContainer = ({userId}: {userId: string}) => {
 			body: JSON.stringify(data),
 		})
 		if (result.ok) {
-			router.push('/new_dashboard/chatbot')
+			router.push('/dashboard/chatbot')
 		}
 	}
 
