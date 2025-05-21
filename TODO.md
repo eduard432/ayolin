@@ -9,4 +9,4 @@
     - Documentar api
     - Documentar páginas
     - Documentar procesos
-    
+- Corregir `types`, usar `WithId<>` en lugar de escribir dos tipos iguales pero con la propiedad id distinta
