@@ -10,3 +10,4 @@
     - Documentar páginas
     - Documentar procesos
 - Corregir `types`, usar `WithId<>` en lugar de escribir dos tipos iguales pero con la propiedad id distinta
+- Verificar uso correcto de `params` en cada ruta de la api posible error: no esperar la promesa de params
