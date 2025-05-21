@@ -1,6 +1,4 @@
 'use client'
-
-import { aiPlugins } from '@/ai/plugins'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
@@ -10,54 +8,37 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { ChatBotRecord, ToolSetting } from '@/types/ChatBot'
-import { MessageCircle, MoreVertical, Search } from 'lucide-react'
+import { MoreVertical, Search } from 'lucide-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-// import ToolDialog from './ToolDialog'
-import { set } from 'zod'
+import ToolDialog from './ToolDialog'
 import { useChatBot } from '../../ChatBotContext'
+import { integrations } from '@/lib/integrations'
+import { ChatBotRecord } from '@/types/ChatBot'
 import { IntegrationType } from '@/types/Integration'
-import IntegrationsDialog from './IntegrationsDialog'
 
-export const integrations: {
-	[key: string]: {
-		name: string
-		description: string
-		icon: React.ReactNode
-	}
-} = {
-	wa: {
-		name: 'WhatsApp',
-		description: 'Connect your WhatsApp account to send and receive messages.',
-		icon: <MessageCircle />,
-	},
-}
-
-type IntegrationCardProps = {
-	integration: string
+type ToolCardProps = {
+	tool: string
 	using?: boolean
-	handleAddIntegration: (toolId: string) => void
-	handleDeleteIntegration: (func: string) => void
-	handleEditIntegration: () => void
+	handleAddTool: (toolId: string) => void
+	handleDeleteFunction: (func: string) => void
+	handleEditFunction: () => void
 }
 
-const IntegrationCard = ({
-	integration,
+const ToolCard = ({
+	tool,
 	using = false,
-	handleAddIntegration,
-	handleDeleteIntegration,
-	handleEditIntegration,
-}: IntegrationCardProps) => {
+	handleAddTool,
+	handleDeleteFunction,
+	handleEditFunction,
+}: ToolCardProps) => {
+
 	return (
-		<Card key={integration} className="flex flex-col">
+		<Card key={tool} className="flex flex-col justify-between">
 			<CardHeader>
 				<div className="flex justify-between items-start">
 					<div className="flex items-center space-x-2">
-						<CardTitle className="text-xl flex gap-2">
-							{integrations[integration].icon}
-							{integrations[integration].name}
-						</CardTitle>
+						<CardTitle className="text-xl">{integrations[tool].name}</CardTitle>
 					</div>
 					{using && (
 						<DropdownMenu>
@@ -68,12 +49,12 @@ const IntegrationCard = ({
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
-								{/* <DropdownMenuItem onClick={handleEditIntegration}>Edit</DropdownMenuItem> */}
+								{/* <DropdownMenuItem onClick={handleEditFunction}>Edit</DropdownMenuItem> */}
 								<DropdownMenuItem>
-									<Link href={`/chatbot/${integration}/analytics`}>View Analytics</Link>
+									<Link href={`/chatbot/${tool}/analytics`}>View Analytics</Link>
 								</DropdownMenuItem>
 								<DropdownMenuItem
-									onClick={() => handleDeleteIntegration(integration)}
+									onClick={() => handleDeleteFunction(tool)}
 									className="text-red-600 cursor-pointer">
 									Delete
 								</DropdownMenuItem>
@@ -82,14 +63,14 @@ const IntegrationCard = ({
 					)}
 				</div>
 				<CardDescription className="flex flex-col justify-between">
-					<p>{integrations[integration].description}</p>
+					<p className="min-h-7">{integrations[tool].description}</p>
 					{!using && (
 						<Button
-							onClick={() => handleAddIntegration(integration)}
+							onClick={() => handleAddTool(tool)}
 							className="my-2 w-full"
 							variant="outline"
 							size="sm">
-							Add Integration
+							Add Tool
 						</Button>
 					)}
 				</CardDescription>
@@ -98,102 +79,99 @@ const IntegrationCard = ({
 	)
 }
 
-export default function IntegrationsPage() {
+export default function ToolsPage() {
 	const { chatBot, setChatBot } = useChatBot()
-	const [activeIntegrations, setActiveIntegrations] = useState(new Set<string>())
-	const [currentIntegration, setCurrentIntegration] = useState('')
+	const [activeIntegrationTypes, setActiveIntegrationTypes] = useState(new Set<string>())
+	const [currentTool, setCurrentTool] = useState('')
 	const [isUpdating, setIsUpdating] = useState(false)
 
 	useEffect(() => {
-		setActiveIntegrations(
+		setActiveIntegrationTypes(
 			new Set(chatBot.integrations.map((integration) => integration.type))
 		)
 	}, [chatBot])
 
-	const handleDeleteIntegration = async (integration: string) => {
+	const handleDeleteIntegration = async (func: string) => {
 		if (!chatBot) return
-		const result = await fetch(`/api/integrations`, {
+		const body = JSON.stringify({
+				type: func,
+			})
+
+			console.log({body})
+		const result = await fetch(`/api/v2/chatbots/${chatBot?._id}/integrations`, {
 			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				botId: chatBot._id,
-				integration,
-			}),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body,
 		})
 		if (result.ok) {
 			const newData = {
 				...chatBot,
-				integrations: chatBot.integrations.filter((i) => i.type !== integration),
+				integrations: chatBot.integrations.filter((integration) => integration.type !== func),
 			}
 			setChatBot(newData)
 		}
 	}
 
-	const handleAddIntegration = async (users: string[]) => {
-		const result = await fetch(`/api/integrations`, {
+	const handleAddIntegration = async (settings: { [key: string]: string }) => {
+		const result = await fetch(`/api/v2/chatbots/${chatBot?._id}/integrations`, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: {
+				'Content-Type': 'application/json',
+			},
 			body: JSON.stringify({
-				botId: chatBot._id,
-				type: currentIntegration,
-				users,
+				type: currentTool,
+				settings,
 			}),
 		})
-		const data = await result.json()
 		if (result.ok) {
-			const newData = {
-				...chatBot,
+			const resp: {integrationId: string} = await result.json()
+			setChatBot((prevChatBot) => ({
+				...prevChatBot,
 				integrations: [
-					...chatBot.integrations,
+					...prevChatBot.integrations,
 					{
-						type: currentIntegration as IntegrationType,
-						users,
-						_id: data.id,
-						chatBotId: chatBot._id,
-						settings: {}
-					},
-				],
-			}
-			setChatBot(newData)
+						_id: resp.integrationId,
+						chatBotId: prevChatBot._id,
+						settings,
+						type: currentTool as IntegrationType,
+						users: [],
+					}
+				]
+			}))
+			setCurrentTool('')
 		}
-		setCurrentIntegration('')
 	}
 
-	const handleEditIntegration = async (users: string[]) => {
-		const copyIntegrations = [...chatBot.integrations]
-		const integrationIndex = copyIntegrations.findIndex(
-			(integration) => integration.type === currentIntegration
-		)
+	const handleEditPlugin = async (settings: { [key: string]: string }) => {
+		const copyPlugins = [...chatBot.tools]
+		const pluginIndex = copyPlugins.findIndex((tool) => tool.id === currentTool)
 
-		if (integrationIndex !== -1) {
-			const prevElement = copyIntegrations[integrationIndex]
-			copyIntegrations[integrationIndex] = {
-				...prevElement,
-				type: currentIntegration as IntegrationType,
-				users,
-			}
+		if (pluginIndex !== -1) {
+			copyPlugins[pluginIndex] = { id: currentTool, settings: settings }
 		}
 
-		const result = await fetch(`/api/integrations`, {
+		const result = await fetch(`/api/plugin`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
 				botId: chatBot._id,
-				updatedUsers: users,
-				integrationId: copyIntegrations[integrationIndex]._id,
+				updatedPlugins: copyPlugins,
+				plugin: currentTool,
 			}),
 		})
 		if (result.ok) {
 			const newData = {
 				...chatBot,
-				integrations: copyIntegrations,
+				tools: copyPlugins,
 			}
 
 			setChatBot(newData)
+			setCurrentTool('')
 		}
-		setCurrentIntegration('')
 	}
 
 	return (
@@ -205,33 +183,32 @@ export default function IntegrationsPage() {
 				</div>
 			</section>
 			<section className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-				<IntegrationsDialog
-					setIsUpdating={setIsUpdating}
-					saveIntegration={handleAddIntegration}
-					setIntegration={setCurrentIntegration}
-					integration={currentIntegration}
+				<ToolDialog
+					saveTool={handleAddIntegration}
+					setTool={setCurrentTool}
+					tool={currentTool}
 					isUpdating={isUpdating}
-					updateIntegration={handleEditIntegration}
-					initialUsers={
-						chatBot.integrations.find((int) => int.type === currentIntegration)?.users
+					updateTool={handleEditPlugin}
+					initialSettings={
+						chatBot.tools.find((tool) => tool.id === currentTool)?.settings
 					}
 				/>
 				{[
-					...activeIntegrations,
+					...activeIntegrationTypes,
 					...Object.keys(integrations).filter(
-						(integration) => !activeIntegrations.has(integration)
+						(integration) => !activeIntegrationTypes.has(integration)
 					),
-				].map((integration) => (
-					<IntegrationCard
-						handleEditIntegration={() => {
-							setCurrentIntegration(integration)
+				].map((toolId) => (
+					<ToolCard
+						handleEditFunction={() => {
 							setIsUpdating(true)
+							setCurrentTool(toolId)
 						}}
-						handleDeleteIntegration={handleDeleteIntegration}
-						handleAddIntegration={() => setCurrentIntegration(integration)}
-						key={integration}
-						integration={integration}
-						using={activeIntegrations.has(integration)}
+						handleDeleteFunction={handleDeleteIntegration}
+						handleAddTool={() => setCurrentTool(toolId)}
+						key={toolId}
+						tool={toolId}
+						using={activeIntegrationTypes.has(toolId)}
 					/>
 				))}
 			</section>

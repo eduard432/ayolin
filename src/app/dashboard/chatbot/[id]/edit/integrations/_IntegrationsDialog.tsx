@@ -15,7 +15,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { aiPlugins } from '@/ai/plugins'
-import { integrations } from './page'
+import { integrations } from './_page'
 import {PhoneInput} from '@/components/phone-input'
 import { Badge } from '@/components/ui/badge'
 
