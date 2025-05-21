@@ -42,7 +42,7 @@ type IntegrationCardProps = {
 	handleEditIntegration: () => void
 }
 
-const ToolCard = ({
+const IntegrationCard = ({
 	integration,
 	using = false,
 	handleAddIntegration,
@@ -150,6 +150,7 @@ export default function IntegrationsPage() {
 						users,
 						_id: data.id,
 						chatBotId: chatBot._id,
+						config: {}
 					},
 				],
 			}
@@ -221,7 +222,7 @@ export default function IntegrationsPage() {
 						(integration) => !activeIntegrations.has(integration)
 					),
 				].map((integration) => (
-					<ToolCard
+					<IntegrationCard
 						handleEditIntegration={() => {
 							setCurrentIntegration(integration)
 							setIsUpdating(true)
