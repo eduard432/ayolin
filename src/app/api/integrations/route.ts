@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
 		users,
 		chatBotId,
 		_id: integrationId,
-		config: {}
+		settings: {}
 	}
 	const integrationResult = await integrationCollection.insertOne(integration)
 

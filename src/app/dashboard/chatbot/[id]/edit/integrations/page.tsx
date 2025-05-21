@@ -150,7 +150,7 @@ export default function IntegrationsPage() {
 						users,
 						_id: data.id,
 						chatBotId: chatBot._id,
-						config: {}
+						settings: {}
 					},
 				],
 			}
