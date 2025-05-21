@@ -10,13 +10,13 @@ import { NextResponse } from 'next/server'
 
 export async function POST(
 	req: Request,
-	{ params }: { params: Promise<{ id: string }> }
+	{ params }: { params: Promise<{ chatId: string }> }
 ) {
 	const { messages }: { messages: Message[] } = await req.json()
 
-	const { id } = await params
+	const { chatId } = await params
 
-	const chatId = new ObjectId(id)
+	const chatObjectId = new ObjectId(chatId)
 
 	const db = await getDatabase()
 	const chatCollection = db.collection<ChatDb>('chat')
@@ -24,12 +24,12 @@ export async function POST(
 
 	// TODO: Se puede hacer más eficiente esto:
 	const chatResult = await chatCollection.findOne({
-		_id: chatId,
+		_id: chatObjectId,
 	})
 
 	if (chatResult) {
 		await chatCollection.updateOne(
-			{ _id: chatId },
+			{ _id: chatObjectId },
 			{
 				$push: {
 					messages: messages[messages.length - 1],
@@ -54,7 +54,7 @@ export async function POST(
 		})
 
 		if (chatBotResult) {
-			const response = await generateResponse(chatBotResult, messages, chatId, false)
+			const response = await generateResponse(chatBotResult, messages, chatObjectId, false)
 
             return NextResponse.json({
                 reply: response,
