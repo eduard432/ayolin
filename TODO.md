@@ -1,13 +1,13 @@
-- Interfaz para crear chatbot
 - Gráficas de estadísticas (backend y frontend)
 - Agregar pestaña de contenido
     - Hace falta crear un segun servidor para manejar los trabajos asincronos
     - Crear api para chats de ejemplo
-- Agregar página de chateo
-- Agregar validaciones a todas las rutas api
+- Mejorar página de chateo (hacerla responsive)
 - Crear docs:
     - Documentar api
     - Documentar páginas
     - Documentar procesos
-- Corregir `types`, usar `WithId<>` en lugar de escribir dos tipos iguales pero con la propiedad id distinta
-- Verificar uso correcto de `params` en cada ruta de la api posible error: no esperar la promesa de params
+- Agregar modo oscuro
+- Verificar uso correcto de `params` en cada ruta de la api, posible error: no esperar la promesa de params
+- Cambiar a API V2
+- Cambiar todo a prisma
