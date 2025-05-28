@@ -2,7 +2,7 @@
 
 import { ChatBotRecord } from '@/types/ChatBot'
 import {useState} from 'react'
-import { ChatBotCard } from './chatbot/ChatBotCard'
+import { ChatBotCard } from './ChatBotCard'
 
 const ChatBots = ({chatBots: defaultChatBots}: {chatBots: ChatBotRecord[]}) => {
 

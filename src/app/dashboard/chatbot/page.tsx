@@ -13,7 +13,7 @@ import { auth } from '@/auth'
 import { getChatbots } from '@/services/chatbot.service'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import ChatBots from '../ChatBots'
+import ChatBots from './ChatBots'
 
 export default async function Page() {
 	const session = await auth()
