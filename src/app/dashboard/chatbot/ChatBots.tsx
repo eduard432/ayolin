@@ -15,8 +15,8 @@ const ChatBots = ({chatBots: defaultChatBots}: {chatBots: ChatBotRecord[]}) => {
 			))}
 
 			<div className="rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
-			<div className="aspect-video rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
-			<div className="aspect-video rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
+			<div className="rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
+			<div className="rounded-xl bg-zinc-100/50 dark:bg-zinc-800/50" />
 		</div>
 	)
 }
