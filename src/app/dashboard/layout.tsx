@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { redirect } from 'next/navigation'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { DashboardProvider } from './DashboardProvider'
-
+import { SessionProvider } from 'next-auth/react'
 
 export default async function NewDashboardLayout({
 	children,
@@ -15,17 +15,19 @@ export default async function NewDashboardLayout({
 	if (!session?.user || !session.user.id) return redirect('/')
 
 	return (
-		<DashboardProvider>
-			<SidebarProvider>
-				<AppSidebar
-					user={{
-						name: session.user.name || '',
-						avatar: session.user.image || '',
-						email: session.user.email || '',
-					}}
-				/>
-				<SidebarInset>{children}</SidebarInset>
-			</SidebarProvider>
-		</DashboardProvider>
+		<SessionProvider basePath='/dashboard/' session={session}>
+			<DashboardProvider>
+				<SidebarProvider>
+					<AppSidebar
+						user={{
+							name: session.user.name || '',
+							avatar: session.user.image || '',
+							email: session.user.email || '',
+						}}
+					/>
+					<SidebarInset>{children}</SidebarInset>
+				</SidebarProvider>
+			</DashboardProvider>
+		</SessionProvider>
 	)
 }

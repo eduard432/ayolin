@@ -1,3 +1,5 @@
+'use client'
+
 import Header from '@/components/Header'
 import { Button } from '@/components/ui/button'
 
@@ -14,12 +16,18 @@ import { getChatbots } from '@/services/chatbot.service'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import ChatBots from './ChatBots'
+import { useSession } from 'next-auth/react'
+import { useChatBots } from '@/services/chatbot.client'
 
-export default async function Page() {
-	const session = await auth()
+export default function Page() {
+	// const session = await auth()
 
-	if (!session?.user || !session.user.id) return redirect('/')
-	const chatBots = await getChatbots(session.user.id)
+	// if (!session?.user || !session.user.id) return redirect('/')
+	// const chatBots = await getChatbots(session.user.id)
+
+	const {data: session} = useSession()
+
+	const { data, isLoading } = useChatBots(session?.user?.id || '')
 
 	return (
 		<main>
@@ -60,7 +68,7 @@ export default async function Page() {
 				</DropdownMenu>
 			</section>
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				<ChatBots chatBots={chatBots} />
+				{data && <ChatBots chatBots={data} />}
 			</section>
 		</main>
 	)
