@@ -12,9 +12,10 @@ const paramsSchema = z.object({
 
 export async function GET(
 	request: NextRequest,
-	{ params }: { params: Promise<{ chatBotId: string }> }
+	{ params: paramsPromise }: { params: Promise<{ chatBotId: string }> }
 ) {
 	try {
+		const params = await paramsPromise
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
 		const result = await addChat(chatBotId)
 

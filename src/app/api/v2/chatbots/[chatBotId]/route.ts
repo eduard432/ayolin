@@ -20,9 +20,10 @@ const updateBodySchema = z
 
 export async function PUT(
 	request: NextRequest,
-	{ params }: { params: Promise<{ chatBotId: string }> }
+	{ params: paramsPromise }: { params: Promise<{ chatBotId: string }> }
 ) {
 	try {
+		const params = await paramsPromise
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
 		const body = await request.json()
 		const data = validateWithSource(updateBodySchema, body, 'body')
