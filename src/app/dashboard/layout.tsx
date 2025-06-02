@@ -15,7 +15,7 @@ export default async function NewDashboardLayout({
 	if (!session?.user || !session.user.id) return redirect('/')
 
 	return (
-		<SessionProvider basePath='/dashboard/' session={session}>
+		<SessionProvider refetchInterval={60*60*3} session={session}refetchOnWindowFocus={false}>
 			<DashboardProvider>
 				<SidebarProvider>
 					<AppSidebar

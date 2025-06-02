@@ -6,6 +6,7 @@ export type GetChatbotsData = {
 }
 
 export const getChatBots = async (userId: string) => {
+	console.log('getChatBots called with userId:', userId)
 	const res = await fetch(`/api/v2/users/${userId}/chatbots`)
 	const data: GetChatbotsData = await res.json()
 
@@ -13,5 +14,10 @@ export const getChatBots = async (userId: string) => {
 }
 
 export const useChatBots = (userId: string) => {
-	return useQuery({ queryKey: ['chatbots', userId], queryFn: () => getChatBots(userId) })
+	return useQuery({
+		queryKey: ['chatbots', userId],
+		queryFn: () => getChatBots(userId),
+		enabled: !!userId,
+		refetchOnWindowFocus: false,
+	})
 }
