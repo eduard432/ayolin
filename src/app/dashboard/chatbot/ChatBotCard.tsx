@@ -46,7 +46,7 @@ export const ChatBotCard = ({ chatBot, setChatBots }: ChatBotCardProps) => {
 	}
 
 	return (
-			<Card className="flex flex-col">
+			<Card className="flex flex-col min-h-40">
 				<CardHeader>
 					<div className="flex justify-between items-start">
 						<div className="flex items-center space-x-2">

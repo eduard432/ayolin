@@ -30,6 +30,11 @@ export default function Page() {
 
 	const { data, isLoading } = useChatBots(session?.user?.id || '')
 
+	useEffect(() => {
+		console.log({isLoading})
+	}, [isLoading])
+	
+
 	return (
 		<main>
 			<Header title={{ content: 'Chat Bots' }} />
@@ -69,7 +74,7 @@ export default function Page() {
 				</DropdownMenu>
 			</section>
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				{data && <ChatBots chatBots={data} />}
+				{<ChatBots chatBots={data} isLoading={isLoading} />}
 			</section>
 		</main>
 	)
