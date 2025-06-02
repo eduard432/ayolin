@@ -11,3 +11,4 @@
 - Verificar uso correcto de `params` en cada ruta de la api, posible error: no esperar la promesa de params
 - Cambiar a API V2
 - Cambiar todo a prisma
+- Usar projections en cada petición a la base datos, para reducir datos de transferencia
