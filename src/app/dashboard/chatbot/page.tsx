@@ -11,9 +11,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Book, Bot, HandCoins, MessageSquareHeart, Notebook, Search } from 'lucide-react'
-import { auth } from '@/auth'
-import { getChatbots } from '@/services/chatbot.service'
-import { redirect, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ChatBots from './ChatBots'
 import { useSession } from 'next-auth/react'
@@ -21,11 +18,6 @@ import { useChatBots } from '@/services/chatbot.client'
 import { useEffect } from 'react'
 
 export default function Page() {
-	// const session = await auth()
-
-	// if (!session?.user || !session.user.id) return redirect('/')
-	// const chatBots = await getChatbots(session.user.id)
-
 	const { data: session, status } = useSession()
 
 	const { data, isLoading } = useChatBots(session?.user?.id || '')
@@ -74,7 +66,7 @@ export default function Page() {
 				</DropdownMenu>
 			</section>
 			<section className="flex flex-1 flex-col gap-4 p-4 pt-0">
-				{<ChatBots chatBots={data} isLoading={isLoading} />}
+				<ChatBots chatBots={data} isLoading={isLoading} />
 			</section>
 		</main>
 	)
