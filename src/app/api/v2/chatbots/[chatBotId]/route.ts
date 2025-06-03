@@ -55,9 +55,10 @@ export async function PUT(
 // /api/chatbots/:chatbotId
 export async function DELETE(
 	request: NextRequest,
-	{ params }: { params: Promise<{ chatBotId: string }> }
+	{ params: paramsPromise }: { params: Promise<{ chatBotId: string }> }
 ) {
 	try {
+		const params = await paramsPromise
 		const { chatBotId } = validateWithSource(paramsSchema, params, 'params')
 		const result = await deleteChatBot(chatBotId)
 
