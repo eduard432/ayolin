@@ -12,3 +12,4 @@
 - Cambiar a API V2
 - Cambiar todo a prisma
 - Usar projections en cada petición a la base datos, para reducir datos de transferencia
+- Verificar en las respuestas de las peticiones que se complete la acción con la propiedad acknowledge
