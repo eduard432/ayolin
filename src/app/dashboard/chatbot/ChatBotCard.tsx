@@ -22,6 +22,7 @@ import {
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ChatBotRecord } from '@/types/ChatBot'
+import { useDeleteChatbot } from '@/services/chatbot.client'
 
 type ChatBotCardProps = {
 	chatBot: ChatBotRecord
@@ -29,21 +30,7 @@ type ChatBotCardProps = {
 }
 
 export const ChatBotCard = ({ chatBot, setChatBots }: ChatBotCardProps) => {
-	const handleDeleteData = async () => {
-		const response = await fetch(`/api/chatbot/${chatBot._id}`, {
-			method: 'DELETE',
-		})
-		if (response.ok) {
-			setChatBots((data) => {
-				const newData = [...data]
-				const index = newData.findIndex((listedChatBot) => listedChatBot._id == chatBot._id)
-				if (index > -1) {
-					newData.splice(index, 1)
-				}
-				return newData
-			})
-		}
-	}
+	const deleteMutation = useDeleteChatbot()
 
 	return (
 			<Card className="flex flex-col min-h-40">
@@ -74,7 +61,7 @@ export const ChatBotCard = ({ chatBot, setChatBots }: ChatBotCardProps) => {
 								<DropdownMenuItem asChild className="cursor-pointer" >
 									<Link href={`/dashboard/chat/${chatBot.defaultChatId}`}>Admin Chat</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem onClick={handleDeleteData} className="text-red-600 cursor-pointer">
+								<DropdownMenuItem onClick={() => deleteMutation.mutate(chatBot._id)} className="text-red-600 cursor-pointer">
 									Delete
 								</DropdownMenuItem>
 							</DropdownMenuContent>

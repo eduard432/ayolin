@@ -42,6 +42,7 @@ export function useDeleteChatbot() {
 			queryClient.invalidateQueries({ queryKey: ['chatbots'] })
 		},
 		onMutate: async (id) => {
+			// Optimistic Update:
 			await queryClient.cancelQueries({ queryKey: ['chatbots'] })
 
 			const previousChatbots = queryClient.getQueryData(['chatbots'])
