@@ -4,6 +4,9 @@ import { getChatbots } from '@/services/chatbot.service'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+// Cambiar esta ruta a: /api/chatbots
+// para que sea consistente con el resto de la API
+
 // GET: Get all chatbots from user:
 // /api/v2/users/:userId/chatbots
 const paramsSchema = z.object({
