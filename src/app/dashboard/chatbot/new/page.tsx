@@ -1,12 +1,14 @@
-import { auth } from '@/auth'
+'use client'
 import Header from '@/components/Header'
-import { redirect } from 'next/navigation'
-import FormContainer from './FormContainer'
+import ChatBotForm from '@/components/ChatBotForm'
+import { useSession } from 'next-auth/react'
+import { useCreateChatbot } from '@/services/chatbot.client'
 
-const NewChatBotPage = async () => {
-	const session = await auth()
+const NewChatBotPage = () => {
 
-	if (!session?.user || !session.user.id) return redirect('/')
+	const { data: session, status } = useSession()
+	const { mutate } = useCreateChatbot()
+
 
 	return (
 		<main>
@@ -19,7 +21,7 @@ const NewChatBotPage = async () => {
 			/>
 			<h3 className="text-4xl p-4 font-semibold">Create a new chat bot</h3>
 			<section className="p-4 pt-0 ">
-				<FormContainer userId={session.user.id} />
+				<ChatBotForm handleSubmit={(data) => mutate({data, userId: session?.user?.id || ''})} />
 			</section>
 		</main>
 	)
