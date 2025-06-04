@@ -21,12 +21,7 @@ export default function Page() {
 	const { data: session, status } = useSession()
 
 	const { data, isLoading } = useChatBots(session?.user?.id || '')
-
-	useEffect(() => {
-		console.log({isLoading})
-	}, [isLoading])
 	
-
 	return (
 		<main>
 			<Header title={{ content: 'Chat Bots' }} />
